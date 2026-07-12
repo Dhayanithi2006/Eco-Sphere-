@@ -75,3 +75,25 @@ All custom Odoo modules are stored under the `addons/` directory:
    python odoo-bin -c odoo.conf
    ```
 4. Log into Odoo, enable **Developer Mode**, navigate to the **Apps** menu, click **Update Apps List**, and search for `EcoSphere Base` to install.
+
+---
+
+## Running the Project
+
+### 1. Interactive Web Preview (Local Simulation)
+The repository includes a lightweight Python HTTP server that runs the frontend dashboard interface and mock Odoo REST API endpoints.
+
+To start the interactive simulation:
+```bash
+python web_preview/server.py
+```
+Once running, open your web browser and go to:
+👉 **http://localhost:8000**
+
+---
+
+### 2. Running Odoo ERP Unit Tests
+To execute backend unit tests for the EcoSphere modules inside an active Odoo environment:
+```bash
+python odoo-bin -c odoo.conf -d <your_database> -i ecosphere_base,ecosphere_environmental,ecosphere_governance,ecosphere_social,ecosphere_gamification,ecosphere_reports,ecosphere_notifications,ecosphere_ai --test-enable
+```
