@@ -107,7 +107,7 @@ Since the server binds to `0.0.0.0`, you can access the preview from any device 
    - **Windows**: Run `ipconfig` in Command Prompt / PowerShell and look for `IPv4 Address` (e.g., `192.168.1.15`).
    - **macOS/Linux**: Run `ifconfig` or `ip a` in the terminal.
 2. On the other laptop, open the browser and navigate to:
-   👉 `http://<your-local-ip>:8000` (e.g., `http://192.168.1.15:8000`)
+   👉 `http://<your-local-ip>:8000` (e.g.,`[http://10.10.33.204:8000/]`)
 
 ---
 
