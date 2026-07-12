@@ -13,7 +13,18 @@ def load_db():
     if os.path.exists(DB_FILE):
         try:
             with open(DB_FILE, 'r') as f:
-                return json.load(f)
+                db = json.load(f)
+                dirty = False
+                if "employee_participations" not in db:
+                    db["employee_participations"] = [
+                        {"employee": "Aditi Rao", "activity": "Tree Plantation", "proof": "photo.jpg", "points": "50 pts", "status": "Pending"},
+                        {"employee": "Karan Shah", "activity": "ESG Workshop", "proof": "cert.pdf", "points": "30 pts", "status": "Approved"},
+                        {"employee": "Siddharth", "activity": "Annual Tree Planting Initiative 2026", "proof": "green_selfie.png", "points": "80 pts", "status": "Approved"}
+                    ]
+                    dirty = True
+                if dirty:
+                    save_db(db)
+                return db
         except Exception:
             pass
             
@@ -31,6 +42,11 @@ def load_db():
         ],
         "csr_activities": [
             {"volunteer": "Siddharth", "event": "Annual Tree Planting Initiative 2026", "hours": "8.0 Hours", "points": "80 Points", "date": "2026-07-05"}
+        ],
+        "employee_participations": [
+            {"employee": "Aditi Rao", "activity": "Tree Plantation", "proof": "photo.jpg", "points": "50 pts", "status": "Pending"},
+            {"employee": "Karan Shah", "activity": "ESG Workshop", "proof": "cert.pdf", "points": "30 pts", "status": "Approved"},
+            {"employee": "Siddharth", "activity": "Annual Tree Planting Initiative 2026", "proof": "green_selfie.png", "points": "80 pts", "status": "Approved"}
         ],
         "rewards": [
             {"name": "Eco Bamboo Water Bottle", "cost": "60 Points", "stock": 15},
@@ -106,6 +122,15 @@ class DynamicESGRequestHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "Permission Denied: Only Compliance Officers can schedule audits."}).encode('utf-8'))
                 return
 
+        elif self.path in ['/api/csr/approve', '/api/csr/reject']:
+            if user_role not in ['CEO', 'Sustainability Manager', 'Department Manager']:
+                self.send_response(403)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Permission Denied: Only Managers can approve or reject participation requests."}).encode('utf-8'))
+                return
+
         # Persist transactions to local JSON database in real-time
         db = load_db()
         if self.path == '/api/carbon/add':
@@ -130,6 +155,41 @@ class DynamicESGRequestHandler(SimpleHTTPRequestHandler):
                 "points": params.get("points", "0 Points"),
                 "date": params.get("date", "2026-07-12")
             })
+            save_db(db)
+
+        elif self.path == '/api/csr/join':
+            if "employee_participations" not in db:
+                db["employee_participations"] = []
+            db["employee_participations"].insert(0, {
+                "employee": params.get("employee", "Sustainability Employee"),
+                "activity": params.get("activity", "Tree Plantation"),
+                "proof": params.get("proof", "proof_upload.png"),
+                "points": params.get("points", "50 pts"),
+                "status": "Pending"
+            })
+            save_db(db)
+
+        elif self.path == '/api/csr/approve':
+            if "employee_participations" in db:
+                idx = int(params.get("index", 0))
+                if 0 <= idx < len(db["employee_participations"]):
+                    db["employee_participations"][idx]["status"] = "Approved"
+                    # Log to csr_activities!
+                    part = db["employee_participations"][idx]
+                    db["csr_activities"].insert(0, {
+                        "volunteer": part["employee"],
+                        "event": part["activity"],
+                        "hours": "4.0 Hours",
+                        "points": part["points"],
+                        "date": "2026-07-12"
+                    })
+            save_db(db)
+
+        elif self.path == '/api/csr/reject':
+            if "employee_participations" in db:
+                idx = int(params.get("index", 0))
+                if 0 <= idx < len(db["employee_participations"]):
+                    db["employee_participations"][idx]["status"] = "Rejected"
             save_db(db)
 
         # Request verified and persisted successfully

@@ -64,5 +64,28 @@
             "cost": "180 Points",
             "stock": 5
         }
+    ],
+    "employee_participations": [
+        {
+            "employee": "Aditi Rao",
+            "activity": "Tree Plantation",
+            "proof": "photo.jpg",
+            "points": "50 pts",
+            "status": "Pending"
+        },
+        {
+            "employee": "Karan Shah",
+            "activity": "ESG Workshop",
+            "proof": "cert.pdf",
+            "points": "30 pts",
+            "status": "Approved"
+        },
+        {
+            "employee": "Siddharth",
+            "activity": "Annual Tree Planting Initiative 2026",
+            "proof": "green_selfie.png",
+            "points": "80 pts",
+            "status": "Approved"
+        }
     ]
 }
