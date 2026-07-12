@@ -14,7 +14,6 @@ The platform provides standard ESG metric aggregations, strict Role-Based Access
 - **💡 AI Strategic Advisor**: Generative AI decision intelligence bot reading calculated database statistics to recommend context-aware mitigations.
 - **📊 Interactive Simulator Dashboard**: Live preview dashboard with a dynamic SVG gauge needle, Odoo REST API simulations, and role-based interface visibility controls.
 
----
 
 ## Repository Structure
 
