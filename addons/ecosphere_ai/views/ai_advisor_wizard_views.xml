@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ecosphere_ai_advisor_wizard_form" model="ir.ui.view">
+        <field name="name">ecosphere.ai.advisor.wizard.form</field>
+        <field name="model">ecosphere.ai.advisor.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Consult Sustainability AI Advisor">
+                <sheet>
+                    <group invisible="ai_response">
+                        <field name="query_input" placeholder="e.g. Analyze carbon logistics anomalies or suggest point strategies..."/>
+                    </group>
+                    <div invisible="not ai_response">
+                        <h4 class="text-success font-weight-bold mb-2">AI Advisor Suggestions</h4>
+                        <div class="p-3 bg-light border rounded mb-3" style="white-space: pre-wrap; font-family: monospace;">
+                            <field name="ai_response" readonly="1"/>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Confidence rating:</strong> <field name="confidence" widget="percentage" readonly="1"/>
+                            </div>
+                        </div>
+                    </div>
+                    <footer>
+                        <!-- Before analysis -->
+                        <button name="action_consult_ai" type="object" string="Ask AI Advisor" class="oe_highlight" invisible="ai_response"/>
+                        
+                        <!-- After analysis feedback -->
+                        <button name="action_rate_like" type="object" string="Helpful 👍" class="btn-success" invisible="not ai_response"/>
+                        <button name="action_rate_dislike" type="object" string="Not Helpful 👎" class="btn-danger" invisible="not ai_response"/>
+                        
+                        <button string="Close" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ecosphere_ai_advisor_wizard" model="ir.actions.act_window">
+        <field name="name">Ask AI Advisor</field>
+        <field name="res_model">ecosphere.ai.advisor.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

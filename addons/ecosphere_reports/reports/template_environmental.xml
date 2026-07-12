@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_environmental_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333;">
+                        <!-- Header -->
+                        <div class="row mb32" style="border-bottom: 2px solid #2e7d32; padding-bottom: 10px;">
+                            <div class="col-6">
+                                <h2 style="color: #2e7d32; margin: 0;">EcoSphere AI</h2>
+                                <p class="text-muted" style="margin: 0;">Sustainability Performance Intelligence</p>
+                            </div>
+                            <div class="col-6 text-end">
+                                <h3 style="margin: 0;">Environmental Brief</h3>
+                                <p class="text-muted" style="margin: 0;">Date: <span t-out="context_today().strftime('%Y-%m-%d')"/></p>
+                            </div>
+                        </div>
+
+                        <!-- Department Info -->
+                        <div class="row mb32">
+                            <div class="col-6">
+                                <strong>Department:</strong> <span t-out="o.name"/><br/>
+                                <strong>Representative Manager:</strong> <span t-out="o.sustainability_manager_id.name or 'N/A'"/><br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>CO2 Target cap:</strong> <span t-out="o.department_target_co2"/> tCO2e<br/>
+                                <strong>Current ESG Performance Score:</strong> <span t-out="o.dynamic_esg_score"/> / 100<br/>
+                            </div>
+                        </div>
+
+                        <!-- Carbon Transactions Table -->
+                        <h4 style="color: #2e7d32; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Department Carbon Ledger</h4>
+                        <table class="table table-sm table-striped mt16" style="width: 100%;">
+                            <thead>
+                                <tr style="background-color: #e8f5e9;">
+                                    <th style="padding: 8px;">Date</th>
+                                    <th style="padding: 8px;">Reference</th>
+                                    <th style="padding: 8px;">Activity</th>
+                                    <th style="padding: 8px; text-align: right;">Quantity</th>
+                                    <th style="padding: 8px;">Unit</th>
+                                    <th style="padding: 8px; text-align: right;">CO2 Equivalent (tCO2e)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="txs" t-value="request.env['ecosphere.carbon.transaction'].search([('department_id', '=', o.id), ('state', '=', 'published')])"/>
+                                <t t-foreach="txs" t-as="tx">
+                                    <tr>
+                                        <td style="padding: 8px;"><span t-out="tx.date"/></td>
+                                        <td style="padding: 8px;"><span t-out="tx.name"/></td>
+                                        <td style="padding: 8px;"><span t-out="tx.activity_type"/></td>
+                                        <td style="padding: 8px; text-align: right;"><span t-out="tx.quantity"/></td>
+                                        <td style="padding: 8px;"><span t-out="tx.unit"/></td>
+                                        <td style="padding: 8px; text-align: right;"><span t-out="tx.co2_eq"/></td>
+                                    </tr>
+                                </t>
+                                <tr t-if="not txs">
+                                    <td colspan="6" class="text-center" style="padding: 16px; color: #777;">No published carbon ledger transactions found for this department.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Active Goals -->
+                        <h4 style="color: #2e7d32; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 30px;">Environmental Goals</h4>
+                        <table class="table table-sm" style="width: 100%; margin-top: 10px;">
+                            <thead>
+                                <tr style="background-color: #f1f8e9;">
+                                    <th style="padding: 8px;">Goal Description</th>
+                                    <th style="padding: 8px;">Start Date</th>
+                                    <th style="padding: 8px;">End Date</th>
+                                    <th style="padding: 8px; text-align: right;">Target Cap</th>
+                                    <th style="padding: 8px; text-align: right;">Current Cumulative</th>
+                                    <th style="padding: 8px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="goals" t-value="request.env['ecosphere.environmental.goal'].search([('department_id', '=', o.id)])"/>
+                                <t t-foreach="goals" t-as="goal">
+                                    <tr>
+                                        <td style="padding: 8px;"><span t-out="goal.name"/></td>
+                                        <td style="padding: 8px;"><span t-out="goal.start_date"/></td>
+                                        <td style="padding: 8px;"><span t-out="goal.end_date"/></td>
+                                        <td style="padding: 8px; text-align: right;"><span t-out="goal.target_co2_eq"/></td>
+                                        <td style="padding: 8px; text-align: right;"><span t-out="goal.current_co2_eq"/></td>
+                                        <td style="padding: 8px;"><span t-out="goal.state"/></td>
+                                    </tr>
+                                </t>
+                                <tr t-if="not goals">
+                                    <td colspan="6" class="text-center" style="padding: 16px; color: #777;">No environmental goals configured.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

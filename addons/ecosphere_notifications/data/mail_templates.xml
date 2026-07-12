@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Carbon Target Breach Email Template -->
+        <record id="email_template_carbon_breach" model="mail.template">
+            <field name="name">EcoSphere: Carbon Limit Exceeded Alert</field>
+            <field name="model_id" ref="ecosphere_environmental.model_ecosphere_carbon_transaction"/>
+            <field name="subject">Carbon Limit Exceeded Alert: {{ object.department_id.name }}</field>
+            <field name="email_to">{{ ctx.get('recipient_email') }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 5px;">
+                    <div style="background-color: #f57f17; color: white; padding: 20px; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+                        <h2 style="margin: 0; font-size: 20px;">EcoSphere Sustainability Alert</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.9;">Target Ceiling Exceeded Warning</p>
+                    </div>
+                    <div style="padding: 20px; line-height: 1.6;">
+                        <p>Hello,</p>
+                        <p>This is an automated ESG advisory. Department <strong>{{ object.department_id.name }}</strong> has exceeded its carbon footprint target limits during the current reporting cycle.</p>
+                        
+                        <div style="background-color: #fffde7; border-left: 4px solid #f57f17; padding: 12px; margin: 15px 0; border-radius: 3px;">
+                            <strong>Latest Triggering Entry:</strong><br/>
+                            Reference: {{ object.name }}<br/>
+                            Emission quantity: {{ object.quantity }} {{ object.unit or 'tCO2e' }} ({{ object.co2_eq }} tCO2e)
+                        </div>
+
+                        <p>Please check the EcoSphere Intelligence Dashboard to inspect department goals and log appropriate mitigation strategies.</p>
+                        <p style="margin-top: 25px; font-size: 12px; color: #888;">This is a system generated alert. Please do not reply directly.</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- Compliance Breach Alert Email Template -->
+        <record id="email_template_compliance_breach" model="mail.template">
+            <field name="name">EcoSphere: Critical Compliance Issue Registered</field>
+            <field name="model_id" ref="ecosphere_governance.model_ecosphere_compliance_issue"/>
+            <field name="subject">CRITICAL Compliance Breach logged: {{ object.title }}</field>
+            <field name="email_to">{{ ctx.get('recipient_email') }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 5px;">
+                    <div style="background-color: #c62828; color: white; padding: 20px; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+                        <h2 style="margin: 0; font-size: 20px;">EcoSphere Governance Alert</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.9;">CRITICAL Priority Regulatory Risk Warning</p>
+                    </div>
+                    <div style="padding: 20px; line-height: 1.6;">
+                        <p>Hello Compliance Officer,</p>
+                        <p>A critical ESG compliance breach has been registered in the system details:</p>
+                        
+                        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold; width: 35%;">Issue:</td>
+                                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;">{{ object.title }}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">Policy Violated:</td>
+                                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;">{{ object.policy_id.name }}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">Source Audit:</td>
+                                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;">{{ object.source_audit_id.name }}</td>
+                            </tr>
+                        </table>
+
+                        <p>Please log in to the EcoSphere Gaps &amp; Breaches Log to launch an official audit investigation.</p>
+                        <p style="margin-top: 25px; font-size: 12px; color: #888;">This is a system generated alert. Please do not reply directly.</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

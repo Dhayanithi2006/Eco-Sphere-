@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Test Users -->
+        
+        <!-- Sustainability Employee User -->
+        <record id="user_esg_employee" model="res.users">
+            <field name="name">Siddharth ESG Employee</field>
+            <field name="login">esg_employee</field>
+            <field name="email">esg_employee@ecosphere.local</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="groups_id" eval="[(6, 0, [ref('group_ecosphere_employee'), ref('base.group_user')])]"/>
+        </record>
+
+        <!-- Sustainability Manager User -->
+        <record id="user_esg_manager" model="res.users">
+            <field name="name">Meera ESG Manager</field>
+            <field name="login">esg_manager</field>
+            <field name="email">esg_manager@ecosphere.local</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="groups_id" eval="[(6, 0, [ref('group_ecosphere_manager'), ref('base.group_user')])]"/>
+        </record>
+
+        <!-- Sustainability Compliance User -->
+        <record id="user_esg_compliance" model="res.users">
+            <field name="name">Kiran Compliance Officer</field>
+            <field name="login">esg_compliance</field>
+            <field name="email">esg_compliance@ecosphere.local</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="groups_id" eval="[(6, 0, [ref('group_ecosphere_compliance'), ref('base.group_user')])]"/>
+        </record>
+
+        <!-- Sustainability Auditor User -->
+        <record id="user_esg_auditor" model="res.users">
+            <field name="name">Anjali ESG Auditor</field>
+            <field name="login">esg_auditor</field>
+            <field name="email">esg_auditor@ecosphere.local</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="groups_id" eval="[(6, 0, [ref('group_ecosphere_auditor'), ref('base.group_user')])]"/>
+        </record>
+
+        <!-- Standard Departments with Sustainability Managers -->
+        <record id="dept_operations" model="hr.department">
+            <field name="name">Operations &amp; Logistics</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="sustainability_manager_id" ref="user_esg_manager"/>
+            <field name="department_target_co2">50.0</field>
+        </record>
+
+        <record id="dept_facilities" model="hr.department">
+            <field name="name">Facilities &amp; Energy</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="sustainability_manager_id" ref="user_esg_manager"/>
+            <field name="department_target_co2">30.0</field>
+        </record>
+
+        <record id="dept_hr" model="hr.department">
+            <field name="name">Human Resources</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="department_target_co2">5.0</field>
+        </record>
+
+        <!-- Link Siddharth to HR Department -->
+        <record id="base.user_admin" model="res.users">
+            <field name="groups_id" eval="[(4, ref('group_ecosphere_admin'))]"/>
+        </record>
+    </data>
+</odoo>

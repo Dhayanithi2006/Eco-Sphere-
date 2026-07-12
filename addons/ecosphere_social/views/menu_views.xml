@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Social Section Menu -->
+    <menuitem id="menu_ecosphere_social"
+              name="Social"
+              parent="ecosphere_base.menu_ecosphere_root"
+              sequence="30"/>
+
+    <!-- CSR Activities Menu -->
+    <menuitem id="menu_ecosphere_csr_activities"
+              name="CSR Activities"
+              parent="menu_ecosphere_social"
+              action="action_ecosphere_csr_activity"
+              sequence="10"/>
+
+    <!-- Volunteer Logs Menu -->
+    <menuitem id="menu_ecosphere_volunteer_logs"
+              name="Volunteer Logs"
+              parent="menu_ecosphere_social"
+              action="action_ecosphere_csr_participation"
+              sequence="20"/>
+
+    <!-- Training Programs Menu -->
+    <menuitem id="menu_ecosphere_training_menu"
+              name="Training Programs"
+              parent="menu_ecosphere_social"
+              action="action_ecosphere_training"
+              sequence="30"/>
+
+    <!-- Diversity Panel Menu -->
+    <menuitem id="menu_ecosphere_diversity"
+              name="Diversity Panel"
+              parent="menu_ecosphere_social"
+              action="action_ecosphere_diversity_dashboard"
+              sequence="40"/>
+</odoo>

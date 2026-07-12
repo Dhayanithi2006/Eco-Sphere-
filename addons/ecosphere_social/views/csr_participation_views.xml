@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_csr_participation_tree" model="ir.ui.view">
+        <field name="name">ecosphere.csr.participation.tree</field>
+        <field name="model">ecosphere.csr.participation</field>
+        <field name="arch" type="xml">
+            <list string="Volunteer Logs">
+                <field name="create_date" string="Logged Date"/>
+                <field name="employee_id"/>
+                <field name="activity_id"/>
+                <field name="hours_logged" sum="Total Volunteer Hours"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'submitted'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_csr_participation_form" model="ir.ui.view">
+        <field name="name">ecosphere.csr.participation.form</field>
+        <field name="model">ecosphere.csr.participation</field>
+        <field name="arch" type="xml">
+            <form string="Volunteer Log">
+                <header>
+                    <button name="action_submit" type="object" string="Submit Log" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object" string="Approve Hours" class="oe_highlight" invisible="state != 'submitted'" groups="ecosphere_base.group_ecosphere_manager,ecosphere_base.group_ecosphere_compliance,ecosphere_base.group_ecosphere_admin"/>
+                    <button name="action_reject" type="object" string="Reject Hours" class="btn-danger" invisible="state != 'submitted'" groups="ecosphere_base.group_ecosphere_manager,ecosphere_base.group_ecosphere_compliance,ecosphere_base.group_ecosphere_admin"/>
+                    <button name="action_draft" type="object" string="Reset to Draft" invisible="state not in ('submitted', 'approved')" groups="ecosphere_base.group_ecosphere_manager,ecosphere_base.group_ecosphere_compliance,ecosphere_base.group_ecosphere_admin"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,rejected"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Volunteer details">
+                            <field name="employee_id" readonly="state != 'draft'"/>
+                            <field name="activity_id" readonly="state != 'draft'"/>
+                            <field name="hours_logged" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Notes &amp; Validation">
+                            <field name="notes" placeholder="Summarize your work and contributions..." readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_csr_participation_kanban" model="ir.ui.view">
+        <field name="name">ecosphere.csr.participation.kanban</field>
+        <field name="model">ecosphere.csr.participation</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" sample="1">
+                <field name="employee_id"/>
+                <field name="activity_id"/>
+                <field name="hours_logged"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title"><field name="employee_id"/></strong>
+                                <div><field name="activity_id"/></div>
+                                <div class="mt4">
+                                    <span>Volunteer Hours: <strong><field name="hours_logged"/> hrs</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ecosphere_csr_participation" model="ir.actions.act_window">
+        <field name="name">Volunteer Logs</field>
+        <field name="res_model">ecosphere.csr.participation</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Submit and verify employee volunteer metrics.
+            </p>
+            <p>
+                Employees log hours spent on active sustainability drives to accumulate gamification reward points.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_notification_tree" model="ir.ui.view">
+        <field name="name">ecosphere.notification.tree</field>
+        <field name="model">ecosphere.notification</field>
+        <field name="arch" type="xml">
+            <list string="Notifications Log" decoration-bf="is_read == False">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="recipient_id"/>
+                <field name="notification_type" widget="badge" decoration-info="notification_type == 'info'" decoration-warning="notification_type == 'warning'" decoration-danger="notification_type == 'critical'"/>
+                <field name="is_read"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_notification_form" model="ir.ui.view">
+        <field name="name">ecosphere.notification.form</field>
+        <field name="model">ecosphere.notification</field>
+        <field name="arch" type="xml">
+            <form string="Sustainability Alert">
+                <header>
+                    <button name="action_mark_read" type="object" string="Mark Read" class="oe_highlight" invisible="is_read == True"/>
+                    <field name="is_read" widget="boolean_button" options="{'terminology': 'read'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Scope">
+                            <field name="recipient_id" readonly="1"/>
+                            <field name="notification_type" readonly="1"/>
+                        </group>
+                        <group string="Timestamp">
+                            <field name="date" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Alert Content" name="content">
+                            <field name="message" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_notification_kanban" model="ir.ui.view">
+        <field name="name">ecosphere.notification.kanban</field>
+        <field name="model">ecosphere.notification</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="is_read" create="false" sample="1">
+                <field name="name"/>
+                <field name="notification_type"/>
+                <field name="date"/>
+                <field name="id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                <div>Level: <field name="notification_type"/></div>
+                                <div class="text-muted mt4"><field name="date"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ecosphere_notification" model="ir.actions.act_window">
+        <field name="name">Alerts Log</field>
+        <field name="res_model">ecosphere.notification</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Welcome to the ESG Alerts Log!
+            </p>
+            <p>
+                Alarms concerning carbon target breaches and policy gaps are registered here.
+            </p>
+        </field>
+    </record>
+</odoo>

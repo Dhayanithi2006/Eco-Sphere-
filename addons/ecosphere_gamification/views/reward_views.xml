@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_reward_tree" model="ir.ui.view">
+        <field name="name">ecosphere.reward.tree</field>
+        <field name="model">ecosphere.reward</field>
+        <field name="arch" type="xml">
+            <list string="Rewards store">
+                <field name="name"/>
+                <field name="point_cost"/>
+                <field name="stock"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_reward_form" model="ir.ui.view">
+        <field name="name">ecosphere.reward.form</field>
+        <field name="model">ecosphere.reward</field>
+        <field name="arch" type="xml">
+            <form string="Reward Item">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image'}"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Eco Glass Water Bottle"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Cost Specifications">
+                            <label for="point_cost"/>
+                            <div class="o_row">
+                                <field name="point_cost"/>
+                                <span>points</span>
+                            </div>
+                            <field name="stock"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Item Description" name="description">
+                            <field name="description" placeholder="Specify item specifications, delivery timelines, etc..."/>
+                        </page>
+                    </notebook>
+                    <div class="oe_chatter">
+                        <button name="action_redeem" type="object" string="Claim &amp; Redeem Item" class="oe_highlight btn-lg mt16"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View with Redeem Button -->
+    <record id="view_reward_kanban" model="ir.ui.view">
+        <field name="name">ecosphere.reward.kanban</field>
+        <field name="model">ecosphere.reward</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="name"/>
+                <field name="point_cost"/>
+                <field name="stock"/>
+                <field name="id"/>
+                <field name="image"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click d-flex flex-column justify-content-between p-3" style="min-height: 140px;">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <div class="pe-2">
+                                    <h5 class="o_kanban_record_title font-weight-bold mb-1"><field name="name"/></h5>
+                                    <div class="text-success font-weight-bold">
+                                        <field name="point_cost"/> Points
+                                    </div>
+                                    <div class="text-muted mt1 text-sm">
+                                        Stock: <field name="stock"/> items
+                                    </div>
+                                </div>
+                                <t t-if="record.image.raw_value">
+                                    <img t-att-src="kanban_image('ecosphere.reward', 'image', record.id.raw_value)" class="avatar rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="reward"/>
+                                </t>
+                            </div>
+                            <div class="text-end mt-2">
+                                <button name="action_redeem" type="object" class="btn btn-sm btn-primary w-100 font-weight-bold" t-att-disabled="record.stock.raw_value &lt;= 0">
+                                    <t t-if="record.stock.raw_value &gt; 0">Claim Reward</t>
+                                    <t t-else="">Out of Stock</t>
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ecosphere_reward" model="ir.actions.act_window">
+        <field name="name">Rewards Store</field>
+        <field name="res_model">ecosphere.reward</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Manage the rewards catalog.
+            </p>
+            <p>
+                Employees redeem their points for eco-friendly gadgets, notebooks, and certifications.
+            </p>
+        </field>
+    </record>
+</odoo>

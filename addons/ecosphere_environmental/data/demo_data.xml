@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default Emission Factors -->
+        <record id="factor_electricity_in" model="ecosphere.emission.factor">
+            <field name="name">Electricity Grid - India CEA</field>
+            <field name="version">2026.1</field>
+            <field name="factor">0.000820</field> <!-- 0.82 kg CO2e / kWh = 0.00082 tCO2e / kWh -->
+            <field name="unit_from">kwh</field>
+            <field name="valid_from">2026-01-01</field>
+            <field name="valid_to">2030-12-31</field>
+            <field name="source">Central Electricity Authority (CEA)</field>
+            <field name="country">India</field>
+        </record>
+
+        <record id="factor_diesel_global" model="ecosphere.emission.factor">
+            <field name="name">Liquid Fuel - Diesel</field>
+            <field name="version">2026.1</field>
+            <field name="factor">0.002680</field> <!-- 2.68 kg CO2e / Liter = 0.00268 tCO2e / L -->
+            <field name="unit_from">liters</field>
+            <field name="valid_from">2026-01-01</field>
+            <field name="valid_to">2030-12-31</field>
+            <field name="source">IPCC Guidelines</field>
+            <field name="country">Global</field>
+        </record>
+
+        <record id="factor_flight_global" model="ecosphere.emission.factor">
+            <field name="name">Aviation - Business Travel</field>
+            <field name="version">2026.1</field>
+            <field name="factor">0.000150</field> <!-- 0.15 kg CO2e / km = 0.00015 tCO2e / km -->
+            <field name="unit_from">km</field>
+            <field name="valid_from">2026-01-01</field>
+            <field name="valid_to">2030-12-31</field>
+            <field name="source">Defra 2025</field>
+            <field name="country">Global</field>
+        </record>
+
+        <record id="factor_waste_global" model="ecosphere.emission.factor">
+            <field name="name">Solid Waste - Landfill</field>
+            <field name="version">2026.1</field>
+            <field name="factor">0.000450</field> <!-- 0.45 kg CO2e / kg = 0.00045 tCO2e / kg -->
+            <field name="unit_from">kg</field>
+            <field name="valid_from">2026-01-01</field>
+            <field name="valid_to">2030-12-31</field>
+            <field name="source">IPCC Guidelines</field>
+            <field name="country">Global</field>
+        </record>
+
+        <!-- Sample Carbon Transactions -->
+        <record id="tx_electricity_ops" model="ecosphere.carbon.transaction">
+            <field name="name">Ops Warehouse Grid Logging Q2</field>
+            <field name="date">2026-07-05</field>
+            <field name="activity_type">electricity</field>
+            <field name="quantity">12000.0</field> <!-- 12000 kWh * 0.00082 = 9.84 tCO2e -->
+            <field name="emission_factor_id" ref="factor_electricity_in"/>
+            <field name="department_id" ref="ecosphere_base.dept_operations"/>
+            <field name="state">approved</field>
+        </record>
+
+        <record id="tx_diesel_facilities" model="ecosphere.carbon.transaction">
+            <field name="name">Generator Diesel Fill-up</field>
+            <field name="date">2026-07-10</field>
+            <field name="activity_type">stationary_combustion</field>
+            <field name="quantity">1500.0</field> <!-- 1500 Liters * 0.00268 = 4.02 tCO2e -->
+            <field name="emission_factor_id" ref="factor_diesel_global"/>
+            <field name="department_id" ref="ecosphere_base.dept_facilities"/>
+            <field name="state">draft</field>
+        </record>
+
+        <!-- Active Environmental Goals -->
+        <record id="goal_operations_q3" model="ecosphere.environmental.goal">
+            <field name="name">Operations Q3 Emissions Cap</field>
+            <field name="start_date">2026-07-01</field>
+            <field name="end_date">2026-09-30</field>
+            <field name="target_co2_eq">20.0</field>
+            <field name="current_co2_eq">9.84</field> <!-- Auto-aggregated from approved/published tx -->
+            <field name="department_id" ref="ecosphere_base.dept_operations"/>
+            <field name="state">active</field>
+        </record>
+    </data>
+</odoo>

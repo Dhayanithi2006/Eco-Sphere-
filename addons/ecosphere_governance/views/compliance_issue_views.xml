@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_compliance_issue_tree" model="ir.ui.view">
+        <field name="name">ecosphere.compliance.issue.tree</field>
+        <field name="model">ecosphere.compliance.issue</field>
+        <field name="arch" type="xml">
+            <list string="Compliance Issues">
+                <field name="title"/>
+                <field name="policy_id"/>
+                <field name="source_audit_id"/>
+                <field name="priority" widget="badge" decoration-success="priority == 'low'" decoration-warning="priority == 'medium'" decoration-danger="priority in ('high', 'critical')"/>
+                <field name="status" widget="badge" decoration-info="status == 'draft'" decoration-warning="status == 'review'" decoration-success="status == 'resolved'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_compliance_issue_form" model="ir.ui.view">
+        <field name="name">ecosphere.compliance.issue.form</field>
+        <field name="model">ecosphere.compliance.issue</field>
+        <field name="arch" type="xml">
+            <form string="Compliance Issue">
+                <header>
+                    <button name="action_investigate" type="object" string="Investigate" class="oe_highlight" invisible="status != 'draft'"/>
+                    <button name="action_resolve" type="object" string="Mark Resolved" class="oe_highlight" invisible="status != 'review'" groups="ecosphere_base.group_ecosphere_compliance,ecosphere_base.group_ecosphere_admin"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,review,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="title" class="oe_edit_only"/>
+                        <h1>
+                            <field name="title" placeholder="e.g. Unresolved safety compliance breach" readonly="status != 'draft'"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Source Links">
+                            <field name="policy_id" readonly="status != 'draft'"/>
+                            <field name="source_audit_id" readonly="status != 'draft'"/>
+                        </group>
+                        <group string="Remediation">
+                            <field name="priority" readonly="status != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Gap Analysis &amp; Actions" name="gap_analysis">
+                            <field name="description" placeholder="Document the non-compliance details, timeline, and corrective actions taken..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ecosphere_compliance_issue" model="ir.actions.act_window">
+        <field name="name">Issues Log</field>
+        <field name="res_model">ecosphere.compliance.issue</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Log compliance breaches and gaps.
+            </p>
+            <p>
+                Track investigations and capture resolution milestones.
+            </p>
+        </field>
+    </record>
+</odoo>

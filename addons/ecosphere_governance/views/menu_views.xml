@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Governance Section Menu -->
+    <menuitem id="menu_ecosphere_governance"
+              name="Governance"
+              parent="ecosphere_base.menu_ecosphere_root"
+              sequence="40"/>
+
+    <!-- Policies Menu -->
+    <menuitem id="menu_ecosphere_policies"
+              name="Policies"
+              parent="menu_ecosphere_governance"
+              action="action_ecosphere_policy"
+              sequence="10"/>
+
+    <!-- Policy Sign-offs Menu -->
+    <menuitem id="menu_ecosphere_sign_offs"
+              name="Policy Sign-offs"
+              parent="menu_ecosphere_governance"
+              action="action_ecosphere_policy_acknowledgment"
+              sequence="20"/>
+
+    <!-- Compliance Audits Menu -->
+    <menuitem id="menu_ecosphere_audits"
+              name="Compliance Audits"
+              parent="menu_ecosphere_governance"
+              action="action_ecosphere_audit"
+              sequence="30"
+              groups="ecosphere_base.group_ecosphere_auditor,ecosphere_base.group_ecosphere_compliance,ecosphere_base.group_ecosphere_admin"/>
+
+    <!-- Issues Log Menu -->
+    <menuitem id="menu_ecosphere_issues"
+              name="Issues Log"
+              parent="menu_ecosphere_governance"
+              action="action_ecosphere_compliance_issue"
+              sequence="40"
+              groups="ecosphere_base.group_ecosphere_auditor,ecosphere_base.group_ecosphere_compliance,ecosphere_base.group_ecosphere_admin"/>
+
+    <!-- Risk Register Menu -->
+    <menuitem id="menu_ecosphere_risk_menu"
+              name="Risk Register"
+              parent="menu_ecosphere_governance"
+              action="action_ecosphere_risk"
+              sequence="50"
+              groups="ecosphere_base.group_ecosphere_manager,ecosphere_base.group_ecosphere_auditor,ecosphere_base.group_ecosphere_compliance,ecosphere_base.group_ecosphere_admin"/>
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Alerts Log Menu Item -->
+    <menuitem id="menu_ecosphere_notification_log"
+              name="Alerts Log"
+              parent="ecosphere_reports.menu_ecosphere_reports"
+              action="action_ecosphere_notification"
+              sequence="30"/>
+</odoo>

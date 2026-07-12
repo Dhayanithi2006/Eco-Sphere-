@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ecosphere_dashboard_form" model="ir.ui.view">
+        <field name="name">ecosphere.dashboard.form</field>
+        <field name="model">ecosphere.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="ESG Intelligence Panel" create="false" edit="false" delete="false">
+                <sheet>
+                    <!-- Dashboard Premium Header -->
+                    <div class="row text-center mb-4 py-3 bg-light border rounded">
+                        <div class="col-md-3 border-end">
+                            <div class="text-uppercase text-muted small font-weight-bold">Weighted ESG Grade</div>
+                            <h1 class="text-success font-weight-bold my-2">
+                                <field name="esg_score" readonly="1"/>
+                            </h1>
+                            <span class="badge bg-success text-uppercase">Scale 0-100</span>
+                        </div>
+                        <div class="col-md-3 border-end">
+                            <div class="text-uppercase text-muted small font-weight-bold">ESG System Health</div>
+                            <h2 class="text-info font-weight-bold my-2 text-capitalize">
+                                <field name="esg_health" readonly="1"/>
+                            </h2>
+                            <span class="badge bg-info">Condition Score</span>
+                        </div>
+                        <div class="col-md-3 border-end">
+                            <div class="text-uppercase text-muted small font-weight-bold">Carbon Trend</div>
+                            <h2 class="text-warning font-weight-bold my-2 text-capitalize">
+                                <field name="esg_trend" readonly="1"/>
+                            </h2>
+                            <span class="badge bg-warning">Monthly delta</span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-uppercase text-muted small font-weight-bold">Compliance Status</div>
+                            <h2 class="text-danger font-weight-bold my-2 text-capitalize">
+                                <field name="esg_risk" readonly="1"/>
+                            </h2>
+                            <span class="badge bg-danger">Oversight Rating</span>
+                        </div>
+                    </div>
+
+                    <!-- Details Tab Breakdown -->
+                    <notebook>
+                        <!-- E Score Breakdown -->
+                        <page string="Environmental Metrics" name="environmental_pillar">
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="card p-3 border-success mb-3">
+                                        <h4 class="text-success font-weight-bold">Carbon Accounting Summary</h4>
+                                        <hr class="mt-1 mb-3"/>
+                                        <div class="row">
+                                            <div class="col-6 mb-2">Total Footprint:</div>
+                                            <div class="col-6 mb-2 font-weight-bold text-end">
+                                                <field name="total_carbon_emissions"/> tCO2e
+                                            </div>
+                                            <div class="col-6 mb-2 text-muted">Scope 1 (Direct):</div>
+                                            <div class="col-6 mb-2 text-end">
+                                                <field name="scope_1_emissions"/> tCO2e
+                                            </div>
+                                            <div class="col-6 mb-2 text-muted">Scope 2 (Electricity):</div>
+                                            <div class="col-6 mb-2 text-end">
+                                                <field name="scope_2_emissions"/> tCO2e
+                                            </div>
+                                            <div class="col-6 mb-2 text-muted">Scope 3 (Commute/Waste):</div>
+                                            <div class="col-6 mb-2 text-end">
+                                                <field name="scope_3_emissions"/> tCO2e
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card p-3 mb-3 bg-light">
+                                        <h4 class="font-weight-bold">Environmental Grade</h4>
+                                        <h1 class="text-success font-weight-bold mt-3 text-center">
+                                            <field name="e_score" readonly="1"/>%
+                                        </h1>
+                                        <p class="text-muted text-center mt-2 small">Calculated from cumulative carbon targets compliance.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+
+                        <!-- S Score Breakdown -->
+                        <page string="Social &amp; Engagement" name="social_pillar">
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="card p-3 border-info mb-3">
+                                        <h4 class="text-info font-weight-bold">CSR &amp; Community Operations</h4>
+                                        <hr class="mt-1 mb-3"/>
+                                        <div class="row">
+                                            <div class="col-6 mb-2">Volunteer Effort Logged:</div>
+                                            <div class="col-6 mb-2 font-weight-bold text-end">
+                                                <field name="total_volunteer_hours"/> hours
+                                            </div>
+                                            <div class="col-6 mb-2">Active CSR Projects:</div>
+                                            <div class="col-6 mb-2 text-end">
+                                                <field name="csr_activities_count"/> campaigns
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card p-3 mb-3 bg-light">
+                                        <h4 class="font-weight-bold">Social Performance</h4>
+                                        <h1 class="text-info font-weight-bold mt-3 text-center">
+                                            <field name="s_score" readonly="1"/>%
+                                        </h1>
+                                        <p class="text-muted text-center mt-2 small">Based on training completion rates and volunteer hours milestones.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+
+                        <!-- G Score Breakdown -->
+                        <page string="Governance &amp; Policy" name="governance_pillar">
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="card p-3 border-warning mb-3">
+                                        <h4 class="text-warning font-weight-bold">Governance &amp; Controls Oversight</h4>
+                                        <hr class="mt-1 mb-3"/>
+                                        <div class="row">
+                                            <div class="col-6 mb-2">Policy Sign-off Ratio:</div>
+                                            <div class="col-6 mb-2 font-weight-bold text-end">
+                                                <field name="policy_compliance_rate"/>%
+                                            </div>
+                                            <div class="col-6 mb-2">Low/Mitigated Risks:</div>
+                                            <div class="col-6 mb-2 text-end">
+                                                <field name="mitigated_risk_count"/> risks
+                                            </div>
+                                            <div class="col-6 mb-2">Unresolved Compliance Breaches:</div>
+                                            <div class="col-6 mb-2 text-end text-danger font-weight-bold">
+                                                <field name="active_issue_count"/> issues
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card p-3 mb-3 bg-light">
+                                        <h4 class="font-weight-bold">Governance Performance</h4>
+                                        <h1 class="text-warning font-weight-bold mt-3 text-center">
+                                            <field name="g_score" readonly="1"/>%
+                                        </h1>
+                                        <p class="text-muted text-center mt-2 small">Determined by risk register density and employee handbook sign-offs.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action that creates/retrieves transient singleton state -->
+    <record id="action_ecosphere_dashboard" model="ir.actions.act_window">
+        <field name="name">Sustainability Intelligence Dashboard</field>
+        <field name="res_model">ecosphere.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Welcome to the EcoSphere AI sustainability executive overview!
+            </p>
+        </field>
+    </record>
+</odoo>

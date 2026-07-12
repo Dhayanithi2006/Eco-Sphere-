@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Environmental Section Menu -->
+    <menuitem id="menu_ecosphere_environmental"
+              name="Environmental"
+              parent="ecosphere_base.menu_ecosphere_root"
+              sequence="20"/>
+
+    <!-- Carbon Ledger Menu -->
+    <menuitem id="menu_ecosphere_carbon_ledger"
+              name="Carbon Ledger"
+              parent="menu_ecosphere_environmental"
+              action="action_ecosphere_carbon_transaction"
+              sequence="10"/>
+
+    <!-- Carbon Goals Menu -->
+    <menuitem id="menu_ecosphere_carbon_goals"
+              name="Carbon Goals"
+              parent="menu_ecosphere_environmental"
+              action="action_ecosphere_environmental_goal"
+              sequence="20"/>
+
+    <!-- Product ESG Profile Menu -->
+    <menuitem id="menu_ecosphere_product_esg"
+              name="Product ESG Profiles"
+              parent="menu_ecosphere_environmental"
+              action="action_ecosphere_products"
+              sequence="30"/>
+
+    <!-- Emission Factors Settings Menu (Placed inside Configuration) -->
+    <menuitem id="menu_ecosphere_emission_factors"
+              name="Emission Factors"
+              parent="ecosphere_base.menu_ecosphere_config"
+              action="action_ecosphere_emission_factor"
+              sequence="20"
+              groups="ecosphere_base.group_ecosphere_admin,ecosphere_base.group_ecosphere_compliance"/>
+</odoo>

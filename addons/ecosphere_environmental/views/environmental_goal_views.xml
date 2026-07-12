@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_environmental_goal_tree" model="ir.ui.view">
+        <field name="name">ecosphere.environmental.goal.tree</field>
+        <field name="model">ecosphere.environmental.goal</field>
+        <field name="arch" type="xml">
+            <list string="Carbon Goals">
+                <field name="name"/>
+                <field name="department_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="target_co2_eq"/>
+                <field name="current_co2_eq"/>
+                <field name="progress_bar" widget="progressbar"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state in ('active', 'achieved')" decoration-danger="state == 'missed'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_environmental_goal_form" model="ir.ui.view">
+        <field name="name">ecosphere.environmental.goal.form</field>
+        <field name="model">ecosphere.environmental.goal</field>
+        <field name="arch" type="xml">
+            <form string="Carbon Goal">
+                <header>
+                    <button name="action_activate" type="object" string="Activate Goal" class="oe_highlight" invisible="state != 'draft'" groups="ecosphere_base.group_ecosphere_manager,ecosphere_base.group_ecosphere_compliance"/>
+                    <button name="action_evaluate" type="object" string="Evaluate Goal Completion" class="oe_highlight" invisible="state != 'active'" groups="ecosphere_base.group_ecosphere_manager,ecosphere_base.group_ecosphere_compliance"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,achieved,missed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Q3 Fleet Emissions Cap" readonly="state != 'draft'"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Goal Frame">
+                            <field name="department_id" readonly="state != 'draft'"/>
+                            <field name="start_date" readonly="state != 'draft'"/>
+                            <field name="end_date" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Emissions Metrics">
+                            <label for="target_co2_eq"/>
+                            <div class="o_row">
+                                <field name="target_co2_eq" readonly="state != 'draft'"/>
+                                <span>tCO2e</span>
+                            </div>
+                            <label for="current_co2_eq"/>
+                            <div class="o_row">
+                                <field name="current_co2_eq"/>
+                                <span>tCO2e</span>
+                            </div>
+                            <field name="progress_bar" widget="progressbar"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ecosphere_environmental_goal" model="ir.actions.act_window">
+        <field name="name">Carbon Goals</field>
+        <field name="res_model">ecosphere.environmental.goal</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Establish environmental carbon limits.
+            </p>
+            <p>
+                Set departmental target parameters to track corporate reduction trajectories across timeframes.
+            </p>
+        </field>
+    </record>
+</odoo>

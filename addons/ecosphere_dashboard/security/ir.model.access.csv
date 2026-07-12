@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dashboard_employee,dashboard_employee,model_ecosphere_dashboard,ecosphere_base.group_ecosphere_employee,1,1,1,1
+access_dashboard_manager,dashboard_manager,model_ecosphere_dashboard,ecosphere_base.group_ecosphere_manager,1,1,1,1
+access_dashboard_auditor,dashboard_auditor,model_ecosphere_dashboard,ecosphere_base.group_ecosphere_auditor,1,1,1,1
+access_dashboard_compliance,dashboard_compliance,model_ecosphere_dashboard,ecosphere_base.group_ecosphere_compliance,1,1,1,1
+access_dashboard_admin,dashboard_admin,model_ecosphere_dashboard,ecosphere_base.group_ecosphere_admin,1,1,1,1

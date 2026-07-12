@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Achievement Badges -->
+        <record id="badge_carbon_champ" model="ecosphere.badge">
+            <field name="name">Carbon Champ</field>
+            <field name="description">Successfully met 100% of department carbon reduction targets during an active quarterly challenge.</field>
+        </record>
+
+        <record id="badge_csr_advocate" model="ecosphere.badge">
+            <field name="name">CSR Advocate</field>
+            <field name="description">Logged over 15 approved hours supporting community outreach campaigns.</field>
+        </record>
+
+        <record id="badge_eco_specialist" model="ecosphere.badge">
+            <field name="name">ESG Specialist</field>
+            <field name="description">Completed all DEI, carbon reduction, and green warehouse training certifications.</field>
+        </record>
+
+        <!-- Rewards Store Catalog -->
+        <record id="reward_bottle" model="ecosphere.reward">
+            <field name="name">Eco Bamboo Water Bottle</field>
+            <field name="point_cost">60</field>
+            <field name="stock">15</field>
+            <field name="description">BPA-free sustainable bamboo water bottle. Capacity 650ml.</field>
+        </record>
+
+        <record id="reward_notebook" model="ecosphere.reward">
+            <field name="name">Recycled Cork Notebook</field>
+            <field name="point_cost">30</field>
+            <field name="stock">25</field>
+            <field name="description">Handmade cork hardcover notebook containing 100% post-consumer recycled paper pages.</field>
+        </record>
+
+        <record id="reward_charger" model="ecosphere.reward">
+            <field name="name">Solar Window Charger</field>
+            <field name="point_cost">180</field>
+            <field name="stock">5</field>
+            <field name="description">High efficiency solar cells with window suction pad. Capacity 3000mAh.</field>
+        </record>
+
+        <!-- Active Challenges -->
+        <record id="challenge_plastic_free" model="ecosphere.challenge">
+            <field name="name">Eco-Office Plastic-Free Week</field>
+            <field name="start_date">2026-07-01</field>
+            <field name="end_date">2026-07-31</field>
+            <field name="target_points">60</field>
+            <field name="reward_badge_id" ref="badge_csr_advocate"/>
+            <field name="state">active</field>
+        </record>
+
+        <!-- Sample point logs to populate history tabs -->
+        <record id="history_siddharth_base" model="ecosphere.employee.point.history">
+            <field name="employee_id" ref="ecosphere_base.user_esg_employee"/>
+            <field name="points_delta">80</field>
+            <field name="reason">Accrued from volunteer participation hours in Tree Planting Campaign.</field>
+            <field name="date">2026-07-05</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_emission_factor_tree" model="ir.ui.view">
+        <field name="name">ecosphere.emission.factor.tree</field>
+        <field name="model">ecosphere.emission.factor</field>
+        <field name="arch" type="xml">
+            <list string="Emission Factors">
+                <field name="name"/>
+                <field name="version"/>
+                <field name="factor"/>
+                <field name="unit_from"/>
+                <field name="valid_from"/>
+                <field name="valid_to"/>
+                <field name="country"/>
+                <field name="source"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_emission_factor_form" model="ir.ui.view">
+        <field name="name">ecosphere.emission.factor.form</field>
+        <field name="model">ecosphere.emission.factor</field>
+        <field name="arch" type="xml">
+            <form string="Emission Factor">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Electricity Grid - CEA"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Core Specifications">
+                            <field name="version"/>
+                            <field name="factor"/>
+                            <field name="unit_from"/>
+                        </group>
+                        <group string="Applicability">
+                            <field name="valid_from"/>
+                            <field name="valid_to"/>
+                            <field name="country"/>
+                            <field name="source"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Reference Information" name="reference_info">
+                            <field name="reference" placeholder="Citations, conversion formula and source website URLs..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_emission_factor_search" model="ir.ui.view">
+        <field name="name">ecosphere.emission.factor.search</field>
+        <field name="model">ecosphere.emission.factor</field>
+        <field name="arch" type="xml">
+            <search string="Search Emission Factors">
+                <field name="name"/>
+                <field name="country"/>
+                <field name="source"/>
+                <filter string="Electricity" name="filter_electricity" domain="[('unit_from', '=', 'kwh')]"/>
+                <filter string="Liquid Fuel" name="filter_liquid_fuel" domain="[('unit_from', '=', 'liters')]"/>
+                <filter string="Travel" name="filter_travel" domain="[('unit_from', '=', 'km')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Unit Type" name="group_by_unit" context="{'group_by': 'unit_from'}"/>
+                    <filter string="Country" name="group_by_country" context="{'group_by': 'country'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ecosphere_emission_factor" model="ir.actions.act_window">
+        <field name="name">Emission Factors</field>
+        <field name="res_model">ecosphere.emission.factor</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_emission_factor_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define your versioned emission factors.
+            </p>
+            <p>
+                These factors are utilized to convert physical fuel usage, mileage, or electricity bills into CO2 equivalent footprints.
+            </p>
+        </field>
+    </record>
+</odoo>

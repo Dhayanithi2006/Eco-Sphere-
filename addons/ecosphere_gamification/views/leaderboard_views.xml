@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Leaderboard Tree View -->
+    <record id="view_users_leaderboard_tree" model="ir.ui.view">
+        <field name="name">res.users.leaderboard.tree</field>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <list string="Leaderboard" create="false" edit="false" delete="false">
+                <field name="name"/>
+                <field name="department_id" string="Department"/>
+                <field name="esg_points" string="ESG Points Balance" decoration-bf="1"/>
+                <field name="earned_badge_ids" widget="many2many_tags" string="Badges Cabinet"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action for Leaderboard -->
+    <record id="action_ecosphere_leaderboard" model="ir.actions.act_window">
+        <field name="name">Leaderboard</field>
+        <field name="res_model">res.users</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_users_leaderboard_tree"/>
+        <field name="domain">[('is_esg_active', '=', True)]</field>
+        <field name="order">esg_points desc</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Welcome to the EcoSphere Leaderboard!
+            </p>
+            <p>
+                See how your peers are contributing towards corporate ESG and sustainability metrics.
+            </p>
+        </field>
+    </record>
+</odoo>

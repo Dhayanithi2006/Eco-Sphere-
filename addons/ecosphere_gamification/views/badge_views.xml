@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_badge_tree" model="ir.ui.view">
+        <field name="name">ecosphere.badge.tree</field>
+        <field name="model">ecosphere.badge</field>
+        <field name="arch" type="xml">
+            <list string="Badges">
+                <field name="name"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_badge_form" model="ir.ui.view">
+        <field name="name">ecosphere.badge.form</field>
+        <field name="model">ecosphere.badge</field>
+        <field name="arch" type="xml">
+            <form string="Achievement Badge">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image'}"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Carbon Neutral Champ"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="Criteria" name="criteria">
+                            <field name="description" placeholder="Requirements to earn this badge..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ecosphere_badge" model="ir.actions.act_window">
+        <field name="name">Badges Cabinet</field>
+        <field name="res_model">ecosphere.badge</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register sustainability awards.
+            </p>
+            <p>
+                Define digital badges earned by employees who clear carbon targets or CSR hours thresholds.
+            </p>
+        </field>
+    </record>
+</odoo>

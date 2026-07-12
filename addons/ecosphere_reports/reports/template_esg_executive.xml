@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_esg_executive_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333;">
+                        <!-- Header -->
+                        <div class="row mb32" style="border-bottom: 3px solid #1b5e20; padding-bottom: 12px;">
+                            <div class="col-6">
+                                <h1 style="color: #1b5e20; margin: 0; font-weight: bold;">EcoSphere AI</h1>
+                                <p class="text-muted" style="margin: 0; font-size: 14px;">Enterprise Sustainability Performance Summary</p>
+                            </div>
+                            <div class="col-6 text-end">
+                                <h2 style="margin: 0; font-weight: normal; color: #555;">CEO ESG Executive Brief</h2>
+                                <p class="text-muted" style="margin: 0;">Organization: <strong t-out="o.name"/><br/>Date: <span t-out="context_today().strftime('%B %d, %Y')"/></p>
+                            </div>
+                        </div>
+
+                        <!-- Dashboard Cards (KPIs) -->
+                        <div class="row mb32" style="margin-top: 20px;">
+                            <div class="col-3" style="padding: 10px;">
+                                <div style="background-color: #f1f8e9; border-left: 4px solid #2e7d32; padding: 15px; border-radius: 4px;">
+                                    <span class="text-muted" style="font-size: 12px; text-transform: uppercase;">Current Score</span>
+                                    <h3 style="margin: 5px 0 0 0; color: #2e7d32; font-weight: bold;"><span t-out="o.dynamic_esg_score"/> / 100</h3>
+                                </div>
+                            </div>
+                            <div class="col-3" style="padding: 10px;">
+                                <div style="background-color: #e8f5e9; border-left: 4px solid #1b5e20; padding: 15px; border-radius: 4px;">
+                                    <span class="text-muted" style="font-size: 12px; text-transform: uppercase;">ESG Health</span>
+                                    <h3 style="margin: 5px 0 0 0; color: #1b5e20; font-weight: bold; text-transform: capitalize;"><span t-out="o.dynamic_esg_health"/></h3>
+                                </div>
+                            </div>
+                            <div class="col-3" style="padding: 10px;">
+                                <div style="background-color: #fff8e1; border-left: 4px solid #f57f17; padding: 15px; border-radius: 4px;">
+                                    <span class="text-muted" style="font-size: 12px; text-transform: uppercase;">Trend Direction</span>
+                                    <h3 style="margin: 5px 0 0 0; color: #f57f17; font-weight: bold; text-transform: capitalize;"><span t-out="o.dynamic_esg_trend"/></h3>
+                                </div>
+                            </div>
+                            <div class="col-3" style="padding: 10px;">
+                                <div style="background-color: #fbe9e7; border-left: 4px solid #c62828; padding: 15px; border-radius: 4px;">
+                                    <span class="text-muted" style="font-size: 12px; text-transform: uppercase;">Regulatory Risk</span>
+                                    <h3 style="margin: 5px 0 0 0; color: #c62828; font-weight: bold; text-transform: capitalize;"><span t-out="o.dynamic_esg_risk"/></h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Environmental Summary section -->
+                        <div class="mb32" style="margin-top: 30px;">
+                            <h4 style="color: #1b5e20; border-bottom: 2px solid #a5d6a7; padding-bottom: 6px; font-weight: bold;">1. Environmental Pillars (Carbon Footprint)</h4>
+                            <t t-set="total_co2" t-value="sum(request.env['ecosphere.carbon.transaction'].search([('company_id', '=', o.id), ('state', '=', 'published')]).mapped('co2_eq'))"/>
+                            <p style="font-size: 14px;">
+                                Total approved carbon footprint emissions for the current reporting cycle: <strong><span t-out="total_co2"/> tCO2e</strong>.<br/>
+                                Annual corporate target capping threshold is registered at: <strong><span t-out="o.sustainability_target_co2"/> tCO2e</strong>.
+                            </p>
+                        </div>
+
+                        <!-- Social Summary section -->
+                        <div class="mb32" style="margin-top: 30px;">
+                            <h4 style="color: #1b5e20; border-bottom: 2px solid #a5d6a7; padding-bottom: 6px; font-weight: bold;">2. Social Pillars (Community &amp; Training)</h4>
+                            <t t-set="total_hours" t-value="sum(request.env['ecosphere.csr.participation'].search([('state', '=', 'approved')]).mapped('hours_logged'))"/>
+                            <t t-set="active_csr" t-value="request.env['ecosphere.csr.activity'].search_count([('state', '=', 'active')])"/>
+                            <p style="font-size: 14px;">
+                                Total corporate volunteer efforts approved: <strong><span t-out="total_hours"/> volunteer hours</strong> accrued across <strong><span t-out="active_csr"/> active CSR programs</strong>.
+                            </p>
+                        </div>
+
+                        <!-- Governance & Risks section -->
+                        <div class="mb32" style="margin-top: 30px;">
+                            <h4 style="color: #1b5e20; border-bottom: 2px solid #a5d6a7; padding-bottom: 6px; font-weight: bold;">3. Governance &amp; Risk Register Summary</h4>
+                            <table class="table table-sm mt16" style="width: 100%;">
+                                <thead>
+                                    <tr style="background-color: #f5f5f5;">
+                                        <th style="padding: 8px;">Risk Title</th>
+                                        <th style="padding: 8px;">Category</th>
+                                        <th style="padding: 8px; text-align: center;">Score</th>
+                                        <th style="padding: 8px;">Priority Level</th>
+                                        <th style="padding: 8px;">Risk Owner</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="risks" t-value="request.env['ecosphere.risk'].search([], limit=5)"/>
+                                    <t t-foreach="risks" t-as="risk">
+                                        <tr>
+                                            <td style="padding: 8px;"><span t-out="risk.title"/></td>
+                                            <td style="padding: 8px; text-transform: capitalize;"><span t-out="risk.category"/></td>
+                                            <td style="padding: 8px; text-align: center; font-weight: bold;"><span t-out="risk.score"/></td>
+                                            <td style="padding: 8px; text-transform: capitalize;"><span t-out="risk.risk_level"/></td>
+                                            <td style="padding: 8px;"><span t-out="risk.owner_id.name"/></td>
+                                        </tr>
+                                    </t>
+                                    <tr t-if="not risks">
+                                        <td colspan="5" class="text-center" style="padding: 16px; color: #777;">No risk registers created.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

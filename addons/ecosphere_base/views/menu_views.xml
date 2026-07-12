@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_ecosphere_root"
+              name="EcoSphere AI"
+              web_icon="ecosphere_base,static/description/icon.png"
+              sequence="10"/>
+
+    <!-- Configuration Menu (Parent for settings and master data) -->
+    <menuitem id="menu_ecosphere_config"
+              name="Configuration"
+              parent="menu_ecosphere_root"
+              sequence="100"
+              groups="group_ecosphere_admin"/>
+
+    <!-- Settings Menu Item -->
+    <menuitem id="menu_ecosphere_settings"
+              name="Settings"
+              parent="menu_ecosphere_config"
+              action="action_ecosphere_config_settings"
+              sequence="10"
+              groups="group_ecosphere_admin"/>
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Primary Dashboard Landing Menu -->
+    <menuitem id="menu_ecosphere_dashboard_root"
+              name="Executive Panel"
+              parent="ecosphere_base.menu_ecosphere_root"
+              action="action_ecosphere_dashboard"
+              sequence="5"/>
+</odoo>

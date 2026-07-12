@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_challenge_tree" model="ir.ui.view">
+        <field name="name">ecosphere.challenge.tree</field>
+        <field name="model">ecosphere.challenge</field>
+        <field name="arch" type="xml">
+            <list string="Challenges">
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="target_points"/>
+                <field name="reward_badge_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'active'" decoration-muted="state == 'completed'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_challenge_form" model="ir.ui.view">
+        <field name="name">ecosphere.challenge.form</field>
+        <field name="model">ecosphere.challenge</field>
+        <field name="arch" type="xml">
+            <form string="Sustainability Campaign">
+                <header>
+                    <button name="action_activate" type="object" string="Launch Challenge" class="oe_highlight" invisible="state != 'draft'" groups="ecosphere_base.group_ecosphere_manager,ecosphere_base.group_ecosphere_compliance,ecosphere_base.group_ecosphere_admin"/>
+                    <button name="action_complete" type="object" string="Complete Campaign &amp; Distribute Badges" class="oe_highlight" invisible="state != 'active'" groups="ecosphere_base.group_ecosphere_manager,ecosphere_base.group_ecosphere_compliance,ecosphere_base.group_ecosphere_admin"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Zero Plastic August" readonly="state != 'draft'"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Campaign Calendar">
+                            <field name="start_date" readonly="state != 'draft'"/>
+                            <field name="end_date" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Achievement &amp; Reward">
+                            <field name="target_points" readonly="state != 'draft'"/>
+                            <field name="reward_badge_id" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ecosphere_challenge" model="ir.actions.act_window">
+        <field name="name">Challenges</field>
+        <field name="res_model">ecosphere.challenge</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Launch interactive sustainability campaigns.
+            </p>
+            <p>
+                Track employee progress during campaigns to automatically hand out badges.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ecosphere</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="30"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="EcoSphere" string="EcoSphere ESG" name="ecosphere_base" groups="ecosphere_base.group_ecosphere_admin">
+                    <block title="AI Decision Intelligence" name="ecosphere_ai_block">
+                        <setting id="enable_ai_intelligence" string="AI Decision Intelligence" help="Activate LLM supervisor, scenario simulators, and recommendation engine.">
+                            <field name="module_ecosphere_ai"/>
+                        </setting>
+                        <setting id="ai_settings" string="Model Configuration" help="Set your target AI model and confidence filters." invisible="not module_ecosphere_ai">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="ai_model_name" class="col-lg-3 o_light_label"/>
+                                    <field name="ai_model_name" placeholder="e.g. gemini-2.5-flash"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="ai_confidence_threshold" class="col-lg-3 o_light_label"/>
+                                    <field name="ai_confidence_threshold"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="General ESG Framework" name="ecosphere_general_block">
+                        <setting id="carbon_reporting_unit" string="Carbon Reporting Unit" help="Global metric standard for emissions output.">
+                            <field name="default_carbon_unit"/>
+                        </setting>
+                        <setting id="audit_logging" string="Strict ESG Auditing" help="Enforce detailed audit log records for transactions, goals, and risk registry adjustments.">
+                            <field name="enable_audit_logs"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_ecosphere_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'ecosphere_base'}</field>
+    </record>
+</odoo>

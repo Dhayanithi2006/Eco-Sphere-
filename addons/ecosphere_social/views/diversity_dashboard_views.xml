@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_diversity_dashboard_tree" model="ir.ui.view">
+        <field name="name">ecosphere.diversity.dashboard.tree</field>
+        <field name="model">ecosphere.diversity.dashboard</field>
+        <field name="arch" type="xml">
+            <list string="Diversity Scores">
+                <field name="department_id"/>
+                <field name="female_ratio"/>
+                <field name="male_ratio"/>
+                <field name="other_ratio"/>
+                <field name="avg_age"/>
+                <field name="ethnic_diversity_index"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_diversity_dashboard_form" model="ir.ui.view">
+        <field name="name">ecosphere.diversity.dashboard.form</field>
+        <field name="model">ecosphere.diversity.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Diversity Scorecard">
+                <sheet>
+                    <group>
+                        <group string="Oversight Area">
+                            <field name="department_id"/>
+                        </group>
+                        <group string="Age &amp; Ethnic Indice">
+                            <field name="avg_age"/>
+                            <field name="ethnic_diversity_index"/>
+                        </group>
+                    </group>
+                    <group string="Gender Demographics (%)">
+                        <group>
+                            <field name="female_ratio"/>
+                            <field name="male_ratio"/>
+                        </group>
+                        <group>
+                            <field name="other_ratio"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Graph View -->
+    <record id="view_diversity_dashboard_graph" model="ir.ui.view">
+        <field name="name">ecosphere.diversity.dashboard.graph</field>
+        <field name="model">ecosphere.diversity.dashboard</field>
+        <field name="arch" type="xml">
+            <graph string="Gender Distribution by Department" type="bar" stacked="True" sample="1">
+                <field name="department_id"/>
+                <field name="female_ratio" type="measure"/>
+                <field name="male_ratio" type="measure"/>
+                <field name="other_ratio" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ecosphere_diversity_dashboard" model="ir.actions.act_window">
+        <field name="name">Diversity Dashboard</field>
+        <field name="res_model">ecosphere.diversity.dashboard</field>
+        <field name="view_mode">list,form,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register departmental diversity scores.
+            </p>
+            <p>
+                Analyze gender ratios, age distribution, and inclusion indices to feed the Social indicators dashboard.
+            </p>
+        </field>
+    </record>
+</odoo>

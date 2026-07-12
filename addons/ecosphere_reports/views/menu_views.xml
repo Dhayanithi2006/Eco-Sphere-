@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Reports Section Menu -->
+    <menuitem id="menu_ecosphere_reports"
+              name="Reports"
+              parent="ecosphere_base.menu_ecosphere_root"
+              sequence="60"/>
+
+    <!-- Export Wizard Menu Item -->
+    <menuitem id="menu_ecosphere_export_wizard"
+              name="Export Data Sheets"
+              parent="menu_ecosphere_reports"
+              action="action_ecosphere_report_export_wizard"
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_inherit_ecosphere" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.ecosphere</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Sustainability (ESG)" name="sustainability_esg">
+                    <group>
+                        <group string="Participation Info">
+                            <field name="is_esg_active"/>
+                            <field name="esg_points" readonly="1"/>
+                        </group>
+                        <group string="Metrics">
+                            <field name="volunteer_hours_logged" readonly="1"/>
+                            <field name="certification_count" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

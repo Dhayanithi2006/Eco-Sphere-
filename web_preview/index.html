@@ -1,0 +1,3209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSphere AI - Sustainability ESG Console</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #080c14;
+            --bg-surface: rgba(15, 23, 42, 0.45);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            
+            /* Domain Colors as requested by user */
+            --domain-environmental: #10b981; /* Green */
+            --domain-social: #3b82f6;        /* Blue */
+            --domain-governance: #8b5cf6;    /* Purple */
+            --domain-ai: #f59e0b;            /* Orange */
+            --domain-executive: #fbbf24;     /* Gold */
+            --domain-alerts: #ef4444;        /* Red */
+            
+            --font-family: 'Outfit', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 10%, rgba(251, 191, 36, 0.02) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.02) 0%, transparent 40%),
+                        var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-family);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            background: rgba(8, 12, 20, 0.7);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 36px 24px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 40px;
+        }
+
+        .logo-section svg {
+            width: 38px;
+            height: 38px;
+            fill: var(--domain-environmental);
+            filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.4));
+        }
+
+        .logo-section h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--domain-environmental), var(--domain-social));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.08) 0%, rgba(16, 185, 129, 0.02) 100%);
+            color: var(--text-primary);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.04);
+            font-weight: 600;
+        }
+
+        /* Module Theme-Specific Overrides for active state */
+        .nav-item.active.env-active {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, rgba(255,255,255,0) 100%);
+            border-color: rgba(16, 185, 129, 0.15);
+        }
+        .nav-item.active.soc-active {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(255,255,255,0) 100%);
+            border-color: rgba(59, 130, 246, 0.15);
+        }
+        .nav-item.active.gov-active {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.08) 0%, rgba(255,255,255,0) 100%);
+            border-color: rgba(139, 92, 246, 0.15);
+        }
+        .nav-item.active.ai-active {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, rgba(255,255,255,0) 100%);
+            border-color: rgba(245, 158, 11, 0.15);
+        }
+
+        /* Main Content Container */
+        .main-container {
+            margin-left: 280px;
+            flex: 1;
+            padding: 48px;
+            max-width: 1440px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+        }
+
+        .header-title h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.75px;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 15.5px;
+            font-weight: 400;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--bg-surface);
+            padding: 10px 22px;
+            border-radius: 9999px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--domain-executive), var(--domain-environmental));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #050505;
+        }
+
+        .role-selector {
+            background: transparent;
+            border: none;
+            color: var(--domain-environmental);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .role-selector option {
+            background: #0c101b;
+            color: white;
+        }
+
+        /* Metric Cards Grid - local on each page */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(20, 28, 48, 0.45) 0%, rgba(9, 12, 22, 0.6) 100%);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 20px;
+            backdrop-filter: blur(30px);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--card-theme-color, var(--domain-executive));
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .metric-label {
+            font-size: 10.5px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .metric-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Layout Panels */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 28px;
+            margin-bottom: 28px;
+        }
+
+        .panel-card {
+            background: linear-gradient(135deg, rgba(17, 24, 39, 0.4) 0%, rgba(9, 12, 22, 0.5) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(30px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 28px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-primary);
+        }
+
+        /* AI Structured Recommendation Card as requested */
+        .ai-recommendation-card {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.06) 0%, rgba(7, 9, 14, 0.4) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.18);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .rec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .rec-badge {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--domain-ai);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .rec-confidence {
+            font-size: 13.5px;
+            color: var(--domain-environmental);
+            font-weight: 700;
+        }
+
+        .rec-impact-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+            padding: 16px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .rec-impact-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .rec-impact-label {
+            font-size: 10.5px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .rec-impact-value {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .rec-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .rec-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .rec-btn:hover {
+            border-color: var(--domain-ai);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        /* Scenario Simulator Widget */
+        .sim-container {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(6, 182, 212, 0.05));
+            border: 1px solid rgba(16, 185, 129, 0.18);
+            border-radius: 24px;
+            padding: 28px;
+        }
+
+        .sim-slider-group {
+            margin: 24px 0;
+        }
+
+        .sim-slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14.5px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .sim-slider-group input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.08);
+            height: 6px;
+            border-radius: 9999px;
+            outline: none;
+        }
+
+        .sim-slider-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--domain-environmental);
+            cursor: pointer;
+            box-shadow: 0 0 12px var(--domain-environmental);
+        }
+
+        .sim-metrics-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            background: rgba(8, 12, 20, 0.6);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Risk Heatmap Matrix */
+        .risk-heatmap-grid {
+            display: grid;
+            grid-template-columns: 50px 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: repeat(6, auto);
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .matrix-header {
+            font-weight: 700;
+            font-size: 12px;
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 8px;
+        }
+
+        .matrix-cell {
+            aspect-ratio: 1.4;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 10.5px;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            color: #0f172a;
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15);
+            transition: all 0.3s;
+        }
+
+        .matrix-cell:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .cell-red { background: linear-gradient(135deg, #f87171, #ef4444); border: 1px solid #dc2626; }
+        .cell-orange { background: linear-gradient(135deg, #fb923c, #f97316); border: 1px solid #ea580c; }
+        .cell-yellow { background: linear-gradient(135deg, #fde047, #eab308); border: 1px solid #ca8a04; }
+        .cell-green { background: linear-gradient(135deg, #34d399, #10b981); border: 1px solid #059669; }
+
+        .matrix-cell .risk-tag {
+            background: rgba(15, 23, 42, 0.85);
+            color: #fff;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            margin-top: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Department Cards Grid */
+        .dept-card-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .dept-item-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.03) 100%);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+        }
+
+        .dept-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dept-score-badge {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--domain-environmental);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+        }
+
+        td {
+            font-size: 14.5px;
+            color: var(--text-primary);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-approved { background: rgba(16, 185, 129, 0.12); color: var(--domain-environmental); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-draft { background: rgba(245, 158, 11, 0.12); color: var(--domain-ai); border: 1px solid rgba(245, 158, 11, 0.2); }
+
+        /* Quick Actions list */
+        .quick-actions-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 14px 18px;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .action-btn:hover {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: var(--domain-environmental);
+            transform: translateY(-2px);
+        }
+
+        /* Chat Widget */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 380px;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            background: rgba(8, 12, 20, 0.4);
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .message.bot {
+            background: rgba(255, 255, 255, 0.03);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            border: 1px solid var(--border-color);
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, var(--domain-environmental), #059669);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+        }
+
+        .chat-input-bar {
+            display: flex;
+            padding: 16px;
+            background: rgba(18, 26, 44, 0.85);
+            border-top: 1px solid var(--border-color);
+            gap: 12px;
+        }
+
+        .chat-input-bar input {
+            flex: 1;
+            background: rgba(9, 12, 22, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            outline: none;
+        }
+
+        .chat-input-bar button {
+            background: var(--domain-environmental);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.015);
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .leaderboard-name {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 600;
+        }
+
+        .leaderboard-rank {
+            font-size: 15px;
+            color: var(--domain-environmental);
+            font-weight: 700;
+            width: 24px;
+        }
+
+        .leaderboard-points {
+            font-weight: 700;
+            color: var(--domain-social);
+        }
+
+        /* View sections */
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active-view {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modal Overlays */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-card {
+            background: #0d1222;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            width: 500px;
+            padding: 36px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-modal {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .modal-cancel {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-submit {
+            background: var(--domain-environmental);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            background: rgba(9, 12, 22, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 15px;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Operations tabs styling */
+        .ops-tabs-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .ops-tab-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .ops-tab-btn.active {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--domain-environmental);
+            border-color: var(--domain-environmental);
+        }
+
+        /* Mockup layout rules */
+        .dashboard-metrics-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr;
+            grid-template-rows: 140px 140px;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        .dashboard-metric-card {
+            background: linear-gradient(135deg, rgba(20, 28, 48, 0.45) 0%, rgba(9, 12, 22, 0.6) 100%);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s;
+        }
+        .dashboard-metric-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .dashboard-metric-card.double-row {
+            grid-row: span 2;
+            height: 300px;
+        }
+        .subpanel-env, .subpanel-soc, .subpanel-gov, .subpanel-gam, .subpanel-rpt, .subpanel-cfg {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Premium Notification Toast -->
+    <div id="toastNotification" style="display:none; position:fixed; bottom:32px; right:32px; background: rgba(16, 185, 129, 0.95); border: 1px solid rgba(255,255,255,0.2); color:white; padding:18px 28px; border-radius:16px; font-weight:600; font-size:15px; box-shadow:0 15px 40px rgba(0,0,0,0.5); z-index:10000; backdrop-filter:blur(16px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;">
+        Notification message here
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-section" style="margin-bottom: 32px; display: flex; align-items: center; gap: 8px;">
+            <h1 style="color: #10b981; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -1.0px; margin: 0;">EcoSphere</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a class="nav-item active" onclick="switchView('dashboard')">🎛️ Executive Panel</a></li>
+            <li><a class="nav-item" onclick="switchView('operations')">📊 Business Ops</a></li>
+            <li><a class="nav-item" onclick="switchView('environmental')">☁️ Carbon Ledger</a></li>
+            <li><a class="nav-item" onclick="switchView('social')">👥 CSR & Volunteering</a></li>
+            <li><a class="nav-item" onclick="switchView('governance')">📄 Policies</a></li>
+            <li><a class="nav-item" onclick="switchView('gamification')">🎯 Gamification</a></li>
+            <li><a class="nav-item" onclick="switchView('reports')">📈 Reports</a></li>
+            <li><a class="nav-item" onclick="switchView('config')">⚙ Settings</a></li>
+            <li><a class="nav-item" onclick="switchView('ai')">💡 AI Advisor</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <header>
+            <div class="header-title">
+                <h2 id="header-view-title">Executive Dashboard</h2>
+                <p id="header-view-subtitle">Consolidated Sustainability Scoring Metrics</p>
+            </div>
+            <div class="profile-container">
+                <div class="user-profile">
+                    <span style="font-size: 14px; color: var(--text-secondary); font-weight: 500;">Role:</span>
+                    <select id="roleSelector" class="role-selector" onchange="switchRole(this.value)">
+                        <option value="CEO">CEO</option>
+                        <option value="Sustainability Manager">Sustainability Manager</option>
+                        <option value="Compliance Officer">Compliance Officer</option>
+                        <option value="Department Manager">Department Manager</option>
+                        <option value="Employee">Employee</option>
+                        <option value="Auditor">Auditor</option>
+                    </select>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar" id="avatarIcon">CE</div>
+                    <span id="profileName">Sustainability CEO</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Quick Actions Panel -->
+        <div class="quick-actions-bar" id="panel-quick-actions" style="margin-bottom: 32px;">
+            <button class="action-btn" onclick="openModal('carbon')">🌱 Log Carbon</button>
+            <button class="action-btn" onclick="openModal('csr')">👥 Log Volunteer Hours</button>
+            <button class="action-btn" onclick="openModal('audit')">🏛 Schedule Audit</button>
+            <button class="action-btn" onclick="openModal('challenge')">⭐ Create Challenge</button>
+            <button class="action-btn" onclick="generateReport()" style="border-color: var(--domain-social); color: var(--domain-social);">📋 Generate ESG Report</button>
+        </div>
+
+        <!-- 1. VIEW SECTION: EXECUTIVE PANEL (Dashboard) -->
+        <div id="view-dashboard" class="view-section active-view">
+            <!-- Mockup Header -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 28px;">
+                <h3 style="font-size: 26px; font-weight: 700; color: #fff;">Enterprise ESG Dashboard</h3>
+                <span style="font-size: 14px; color: var(--text-secondary); font-weight: 600;">October 2024</span>
+            </div>
+
+            <!-- Semicircle Dial Gauge & KPI metrics grid -->
+            <div class="dashboard-metrics-grid">
+                <!-- Gauge Card -->
+                <div class="dashboard-metric-card double-row" style="background: linear-gradient(135deg, #0d1222 0%, #111a36 100%); border-color: rgba(16, 185, 129, 0.25);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">📈 Weighted ESG Grade</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 16px;">
+                        <div>
+                            <div class="metric-value" style="font-size: 42px; font-weight: 700; color: #fff;"><span id="ceo-esg-score">89.5</span><span style="font-size: 20px; color: var(--text-secondary);">/100</span></div>
+                            <div style="font-size: 14px; font-weight: 600; color: #10b981; display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                                <span>Excellent, Green</span>
+                                <span style="color: #10b981;">↗ 92.3% YoY</span>
+                            </div>
+                        </div>
+                        
+                        <div style="position: relative; width: 160px; height: 90px; overflow: hidden; display: flex; justify-content: center; align-items: flex-end;">
+                            <svg width="150" height="75" viewBox="0 0 150 75" style="position: absolute; bottom: 0;">
+                                <path d="M 15 75 A 60 60 0 0 1 135 75" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12" stroke-linecap="round"/>
+                                <path d="M 15 75 A 60 60 0 0 1 135 75" fill="none" stroke="url(#gaugeGrad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="188.4" stroke-dashoffset="20"/>
+                                <defs>
+                                    <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#ef4444" />
+                                        <stop offset="50%" stop-color="#f59e0b" />
+                                        <stop offset="100%" stop-color="#10b981" />
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="75" cy="75" r="6" fill="#f8fafc" />
+                                <line x1="75" y1="75" x2="75" y2="25" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round" transform="rotate(62 75 75)" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ESG Health Card -->
+                <div class="dashboard-metric-card" style="border-left: 4px solid var(--domain-social);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase;">🛡️ ESG Health</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
+                        <div>
+                            <div style="font-size: 26px; font-weight: 700; color: #10b981;">Excellent ✔</div>
+                            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Health Status • 91.1 Overall Score</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carbon Trend Card 1 -->
+                <div class="dashboard-metric-card" style="border-left: 4px solid var(--domain-environmental);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase;">🌱 Carbon Trend</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
+                        <div>
+                            <div style="font-size: 26px; font-weight: 700; color: #10b981;">Improving</div>
+                            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">↘ 6.1% reduction</div>
+                        </div>
+                    </div>
+                    <div style="position:absolute; bottom:0; left:0; right:0; height:35px; opacity:0.15; overflow:hidden;">
+                        <svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%; height:100%;">
+                            <path d="M0,25 Q20,10 40,20 T80,5 T100,20 L100,30 L0,30 Z" fill="var(--domain-environmental)"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Carbon Trend Card 2 -->
+                <div class="dashboard-metric-card" style="border-left: 4px solid var(--domain-environmental);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase;">🌱 Target Mitigations</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
+                        <div>
+                            <div style="font-size: 26px; font-weight: 700; color: #10b981;">On Track</div>
+                            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Scope 1 & 2 targets met</div>
+                        </div>
+                    </div>
+                    <div style="position:absolute; bottom:0; left:0; right:0; height:35px; opacity:0.15; overflow:hidden;">
+                        <svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%; height:100%;">
+                            <path d="M0,20 Q30,5 60,25 T100,10 L100,30 L0,30 Z" fill="var(--domain-environmental)"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Total Carbon Footprint Card -->
+                <div class="dashboard-metric-card" style="border-left: 4px solid var(--domain-social);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase;">👣 Total Carbon Footprint</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
+                        <div>
+                            <div style="font-size: 26px; font-weight: 700; color: #3b82f6;">12,450 <span style="font-size:14px; color:var(--text-secondary);">tCO2e</span></div>
+                            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Target limits: 11,800</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Semicircle Dial Chart + Leaderboard layout matching mockup bottom -->
+            <div class="dashboard-layout">
+                <!-- Stacked Bar Chart -->
+                <div class="panel-card" style="background:#0d1222; border-radius:16px;">
+                    <div class="panel-title" style="margin-bottom: 2px;">Carbon Emissions Breakdown (CO2e)</div>
+                    <span style="font-size: 11px; color: var(--text-secondary); display:block; margin-bottom: 12px;">tCO2e</span>
+                    <div style="height: 280px; position: relative;">
+                        <canvas id="emissionsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gamification Leaderboard -->
+                <div class="panel-card" style="background:#0d1222; border-radius:16px;">
+                    <div class="panel-title" style="margin-bottom:8px;">ESG Gamification Leaderboard</div>
+                    <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-secondary); margin-bottom:16px;">
+                        <span>Employees</span>
+                        <span>Sustainability achievements</span>
+                    </div>
+                    
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <!-- Sarah J -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(90deg, rgba(16,185,129,0.1) 0%, rgba(15,23,42,0.3) 100%); padding:10px 16px; border-radius:12px; border: 1px solid rgba(16,185,129,0.15);">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-weight:700; color:#10b981; width:20px;">1.</span>
+                                <div class="user-avatar" style="width:30px; height:30px; font-size:11px; background:#10b981; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700;">SJ</div>
+                                <span style="font-weight:600;">Sarah J.</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-weight:700; color:#fff;">980 pts</span>
+                                <span style="color:#fbbf24; font-size:13px;">(⭐)</span>
+                            </div>
+                        </div>
+
+                        <!-- Michael L -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.01); padding:10px 16px; border-radius:12px; border: 1px solid var(--border-color);">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-weight:700; color:var(--text-secondary); width:20px;">2.</span>
+                                <div class="user-avatar" style="width:30px; height:30px; font-size:11px; background:#3b82f6; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700;">ML</div>
+                                <span style="font-weight:600;">Michael L.</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-weight:700; color:#fff;">945 pts</span>
+                                <span style="color:#fbbf24; font-size:13px;">(⭐⭐)</span>
+                            </div>
+                        </div>
+
+                        <!-- Chloe W -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(90deg, rgba(245,158,11,0.08) 0%, rgba(15,23,42,0.3) 100%); padding:10px 16px; border-radius:12px; border: 1px solid rgba(245,158,11,0.15);">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-weight:700; color:#f59e0b; width:20px;">3.</span>
+                                <div class="user-avatar" style="width:30px; height:30px; font-size:11px; background:#f59e0b; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700;">CW</div>
+                                <span style="font-weight:600;">Chloe W.</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-weight:700; color:#fff;">910 pts</span>
+                                <span style="color:#fbbf24; font-size:13px;">(⭐)</span>
+                            </div>
+                        </div>
+
+                        <!-- David B -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.01); padding:10px 16px; border-radius:12px; border: 1px solid var(--border-color);">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-weight:700; color:var(--text-secondary); width:20px;">4.</span>
+                                <div class="user-avatar" style="width:30px; height:30px; font-size:11px; background:#6b7280; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700;">DB</div>
+                                <span style="font-weight:600;">David B.</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-weight:700; color:#94a3b8;">885 pts</span>
+                                <span style="background:rgba(16,185,129,0.15); width:12px; height:12px; border-radius:50%; display:inline-block; border: 2px solid #10b981;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Emily C -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.01); padding:10px 16px; border-radius:12px; border: 1px solid var(--border-color);">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-weight:700; color:var(--text-secondary); width:20px;">5.</span>
+                                <div class="user-avatar" style="width:30px; height:30px; font-size:11px; background:#8b5cf6; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700;">EC</div>
+                                <span style="font-weight:600;">Emily C.</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-weight:700; color:#94a3b8;">870 pts</span>
+                                <span style="background:rgba(16,185,129,0.15); width:12px; height:12px; border-radius:50%; display:inline-block; border: 2px solid #10b981;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. VIEW SECTION: BUSINESS OPERATIONS -->
+        <div id="view-operations" class="view-section">
+            <div class="panel-card" style="border-left:4px solid var(--domain-social);">
+                <div class="panel-title" style="color:var(--domain-social);">📊 Business Operations Hub</div>
+                <p style="color:var(--text-secondary); margin-bottom: 24px; font-size: 14.5px;">
+                    Select an operational module to record transactions. The Odoo engine will automatically calculate emissions using the versioned conversion factors and post carbon entries to the Ledger.
+                </p>
+
+                <div class="ops-tabs-container">
+                    <button class="ops-tab-btn active" onclick="switchOpsTab('purchase')">🛍 Purchase Invoices</button>
+                    <button class="ops-tab-btn" onclick="switchOpsTab('mfg')">⚙ Manufacturing Runs</button>
+                    <button class="ops-tab-btn" onclick="switchOpsTab('fleet')">🚚 Fleet Logistics</button>
+                    <button class="ops-tab-btn" onclick="switchOpsTab('expenses')">✈ Travel Expenses</button>
+                </div>
+
+                <!-- Purchase Operations Form -->
+                <div id="ops-purchase" class="ops-panel">
+                    <form onsubmit="submitOps('purchase', event)" style="max-width: 500px;">
+                        <div class="form-group">
+                            <label>Utility Supplier Invoice Ref</label>
+                            <input type="text" id="ops_pur_ref" required placeholder="e.g. Adani Power Inv Q2-12">
+                        </div>
+                        <div class="form-group">
+                            <label>Electricity Purchased (kWh)</label>
+                            <input type="number" id="ops_pur_qty" required placeholder="e.g. 15000">
+                        </div>
+                        <button type="submit" class="modal-submit" style="background:var(--domain-social);">Post Purchase Invoice</button>
+                    </form>
+                </div>
+
+                <!-- Mfg Operations Form -->
+                <div id="ops-mfg" class="ops-panel" style="display:none;">
+                    <form onsubmit="submitOps('mfg', event)" style="max-width: 500px;">
+                        <div class="form-group">
+                            <label>Machine Work Order Ref</label>
+                            <input type="text" id="ops_mfg_ref" required placeholder="e.g. WorkOrder Factory Line A">
+                        </div>
+                        <div class="form-group">
+                            <label>Energy Consumed (kWh)</label>
+                            <input type="number" id="ops_mfg_qty" required placeholder="e.g. 8000">
+                        </div>
+                        <button type="submit" class="modal-submit" style="background:var(--domain-social);">Log Manufacturing Run</button>
+                    </form>
+                </div>
+
+                <!-- Fleet Operations Form -->
+                <div id="ops-fleet" class="ops-panel" style="display:none;">
+                    <form onsubmit="submitOps('fleet', event)" style="max-width: 500px;">
+                        <div class="form-group">
+                            <label>Logistics Truck Fuel Slip</label>
+                            <input type="text" id="ops_flt_ref" required placeholder="e.g. Diesel Refill Card 4">
+                        </div>
+                        <div class="form-group">
+                            <label>Fuel Consumed (Liters)</label>
+                            <input type="number" id="ops_flt_qty" required placeholder="e.g. 1200">
+                        </div>
+                        <button type="submit" class="modal-submit" style="background:var(--domain-social);">Record Fleet Fuel</button>
+                    </form>
+                </div>
+
+                <!-- Expenses Operations Form -->
+                <div id="ops-expenses" class="ops-panel" style="display:none;">
+                    <form onsubmit="submitOps('expenses', event)" style="max-width: 500px;">
+                        <div class="form-group">
+                            <label>Employee Aviation Travel Slip</label>
+                            <input type="text" id="ops_exp_ref" required placeholder="e.g. Executive Flight Mumbai-Delhi">
+                        </div>
+                        <div class="form-group">
+                            <label>Flight Distance Traveled (km)</label>
+                            <input type="number" id="ops_exp_qty" required placeholder="e.g. 1400">
+                        </div>
+                        <button type="submit" class="modal-submit" style="background:var(--domain-social);">Post Expense Claim</button>
+                    </form>
+                </div>
+
+                <!-- Operational Flowchart Visualizer -->
+                <div style="margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); border-radius: 12px; font-size: 13px; line-height: 1.5; color: var(--text-secondary);">
+                    <strong>ERP Workflow Chain Visualizer:</strong>
+                    <div style="margin-top: 10px; display: flex; align-items: center; gap: 12px;">
+                        <span style="background: rgba(59, 130, 246, 0.1); color: var(--domain-social); padding: 4px 8px; border-radius: 4px;">Purchase/Fleet Log</span>
+                        <span>──►</span>
+                        <span style="background: rgba(245, 158, 11, 0.1); color: var(--domain-ai); padding: 4px 8px; border-radius: 4px;">Calculated Emission factor</span>
+                        <span>──►</span>
+                        <span style="background: rgba(16, 185, 129, 0.1); color: var(--domain-environmental); padding: 4px 8px; border-radius: 4px;">Calculated Carbon Transaction</span>
+                        <span>──►</span>
+                        <span style="background: var(--bg-primary); border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 4px;">Dynamic ESG Rollup</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. VIEW SECTION: ENVIRONMENTAL (Carbon Ledger Specific widgets) -->
+        <div id="view-environmental" class="view-section">
+            <!-- Environmental KPIs -->
+            <div class="metrics-grid">
+                <div class="metric-card" style="--card-theme-color: var(--domain-environmental);">
+                    <span class="metric-label">Scope 1 (Direct)</span>
+                    <span class="metric-value" id="env-scope1-val" style="color: var(--domain-alerts);">4.02 t</span>
+                    <span class="metric-subtitle">Diesel backup combustion</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-environmental);">
+                    <span class="metric-label">Scope 2 (Indirect)</span>
+                    <span class="metric-value" id="env-scope2-val" style="color: var(--domain-social);">9.84 t</span>
+                    <span class="metric-subtitle">India Grid utility usage</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-environmental);">
+                    <span class="metric-label">Scope 3 (Other)</span>
+                    <span class="metric-value" id="env-scope3-val" style="color: var(--domain-ai);">0.00 t</span>
+                    <span class="metric-subtitle">Aviation distances logged</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-environmental);">
+                    <span class="metric-label">Active Carbon Goals</span>
+                    <span class="metric-value" style="color: var(--domain-environmental);">100%</span>
+                    <span class="metric-subtitle">Under Operations limits</span>
+                </div>
+            </div>
+
+            <!-- Sub-Tabs Navigation for Environmental Module -->
+            <div class="ops-tabs-container" style="margin-top: 20px; margin-bottom: 20px;">
+                <button class="ops-tab-btn active" onclick="switchSubTab('env', 'factors')">🏷️ Emission Factors</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('env', 'products')">📦 Product ESG Profiles</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('env', 'tx')">☁️ Carbon Transactions</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('env', 'goals')">🎯 Environmental Goals</button>
+            </div>
+
+            <!-- Panel 1: Emission Factors -->
+            <div id="subpanel-env-factors" class="subpanel-env" style="display: block;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Conversion Factors Registry</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Activity Type</th>
+                                <th>Conversion Factor</th>
+                                <th>Source Standard</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Electricity Grid (Scope 2)</td>
+                                <td>0.00082 tCO2e / kWh</td>
+                                <td>CEA India Grid Factor 2024</td>
+                            </tr>
+                            <tr>
+                                <td>Diesel Fuel Combustion (Scope 1)</td>
+                                <td>0.00268 tCO2e / Liter</td>
+                                <td>IPCC Guidelines v6</td>
+                            </tr>
+                            <tr>
+                                <td>Aviation Travel Global (Scope 3)</td>
+                                <td>0.00015 tCO2e / km</td>
+                                <td>ICAO Carbon Calculator v4</td>
+                            </tr>
+                            <tr>
+                                <td>Landfill Municipal Waste (Scope 3)</td>
+                                <td>0.29000 tCO2e / Ton</td>
+                                <td>EPA Waste Reduction Model</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel 2: Product ESG Profiles -->
+            <div id="subpanel-env-products" class="subpanel-env" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Product ESG Profiles</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Carbon Footprint (tCO2e)</th>
+                                <th>Recyclability Rating</th>
+                                <th>Material Circularity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>EcoSphere Smart Hub v1</td>
+                                <td>Electronics</td>
+                                <td>0.0142 t</td>
+                                <td>92% Recyclable</td>
+                                <td>40% Post-consumer Recycled</td>
+                            </tr>
+                            <tr>
+                                <td>Biodegradable Smartphone Case</td>
+                                <td>Accessories</td>
+                                <td>0.0015 t</td>
+                                <td>100% Compostable</td>
+                                <td>95% Organic Bamboo Fiber</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel 3: Carbon Transactions -->
+            <div id="subpanel-env-tx" class="subpanel-env" style="display: none;">
+                <!-- Forecast graph -->
+                <div class="panel-card" style="margin-bottom: 24px;">
+                    <div class="panel-title">Emissions Monthly Trend & AI Predictions</div>
+                    <div style="height: 240px; position: relative;">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="dashboard-layout" style="grid-template-columns: 1fr;">
+                    <!-- Left -->
+                    <div>
+                        <!-- Structured AI recommendation card as requested -->
+                        <div class="ai-recommendation-card" style="margin-bottom: 24px;">
+                            <div class="rec-header">
+                                <span class="rec-badge">🌱 AI Carbon Intelligence</span>
+                                <span class="rec-confidence">91% Confidence</span>
+                            </div>
+                            <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Switch 30% of diesel logistics forklifts to EV models</h4>
+                            <p style="color: var(--text-secondary); font-size: 13.5px; margin-bottom: 16px;">
+                                <strong>Reason:</strong> High Scope 1 backup diesel consumption detected in Facilities logs during power outages.
+                            </p>
+                            
+                            <div class="rec-impact-row">
+                                <div class="rec-impact-item">
+                                    <span class="rec-impact-label">Estimated Carbon Impact</span>
+                                    <span class="rec-impact-value" style="color: var(--domain-environmental);">↓ 12 Tons CO2/year</span>
+                                </div>
+                                <div class="rec-impact-item">
+                                    <span class="rec-impact-label">Annual Cost Savings</span>
+                                    <span class="rec-impact-value" style="color: var(--domain-social);">₹2.8 Lakh / year</span>
+                                </div>
+                                <div class="rec-impact-item">
+                                    <span class="rec-impact-label">Evidence Base</span>
+                                    <span class="rec-impact-value">2 Active Goals Checked</span>
+                                </div>
+                            </div>
+
+                            <button class="ai-why-btn" onclick="toggleWhy(this)">
+                                <span>View Evidence Details</span> ▾
+                            </button>
+                            <div class="ai-why-details">
+                                <strong>Evidence Trail:</strong> Facilities backup generator logs indicate unlogged diesel refills (1,500L) represent a consistent carbon peak. Transitioning to local storage battery backup resolves Scope 1 compliance alerts.
+                            </div>
+
+                            <div class="rec-actions">
+                                <button class="rec-btn" onclick="rateRecommendation('Logistics EV Switch', 'like')">Helpful 👍</button>
+                                <button class="rec-btn" onclick="rateRecommendation('Logistics EV Switch', 'dislike')">Not Helpful 👎</button>
+                            </div>
+                        </div>
+
+                        <!-- Ledger Table -->
+                        <div class="panel-card" style="padding: 24px;">
+                            <div class="panel-title">Carbon Ledger entries</div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Scope Type</th>
+                                        <th>Quantity</th>
+                                        <th>CO2 Equivalent</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="carbonTableBodyPage">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 4: Environmental Goals -->
+            <div id="subpanel-env-goals" class="subpanel-env" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                        <div class="panel-title" style="margin-bottom:0;">Environmental Goals Registry</div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="action-btn" onclick="showToast('New goal addition initiated')" style="background:var(--domain-environmental); color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">+ New Goal</button>
+                            <button class="action-btn" onclick="showToast('Exporting Goals registry data...')" style="background:transparent; color:var(--text-secondary); border:1px solid var(--border-color); padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">Export ▾</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Goal Name</th>
+                                <th>Department</th>
+                                <th>Target CO2 Limit</th>
+                                <th>Current CO2 Value</th>
+                                <th>Progress Bar</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Reduce Fleet Emissions</td>
+                                <td>Logistics</td>
+                                <td>500 t</td>
+                                <td>380 t</td>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div style="background:rgba(255,255,255,0.06); width:100px; height:8px; border-radius:4px; overflow:hidden;">
+                                            <div style="background:#10b981; width:76%; height:100%;"></div>
+                                        </div>
+                                        <span>76%</span>
+                                    </div>
+                                </td>
+                                <td>2026-12-31</td>
+                                <td><span class="status-badge status-approved">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Cut Packaging Waste</td>
+                                <td>Manufacturing</td>
+                                <td>120 t</td>
+                                <td>98 t</td>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div style="background:rgba(255,255,255,0.06); width:100px; height:8px; border-radius:4px; overflow:hidden;">
+                                            <div style="background:#10b981; width:82%; height:100%;"></div>
+                                        </div>
+                                        <span>82%</span>
+                                    </div>
+                                </td>
+                                <td>2026-09-30</td>
+                                <td><span class="status-badge status-approved" style="background:rgba(16,185,129,0.15); color:#10b981;">On Track</span></td>
+                            </tr>
+                            <tr>
+                                <td>Office Energy Cut</td>
+                                <td>Corporate</td>
+                                <td>80 t</td>
+                                <td>80 t</td>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div style="background:rgba(255,255,255,0.06); width:100px; height:8px; border-radius:4px; overflow:hidden;">
+                                            <div style="background:#3b82f6; width:100%; height:100%;"></div>
+                                        </div>
+                                        <span>100%</span>
+                                    </div>
+                                </td>
+                                <td>2026-08-30</td>
+                                <td><span class="status-badge status-approved" style="background:rgba(59,130,246,0.15); color:#3b82f6;">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. VIEW SECTION: SOCIAL (CSR Center) -->
+        <div id="view-social" class="view-section">
+            <!-- Social KPIs -->
+            <div class="metrics-grid">
+                <div class="metric-card" style="--card-theme-color: var(--domain-social);">
+                    <span class="metric-label">Volunteer Hours</span>
+                    <span class="metric-value" style="color: var(--domain-environmental);">8.0 Hours</span>
+                    <span class="metric-subtitle">1 active participant</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-social);">
+                    <span class="metric-label">Points Distributed</span>
+                    <span class="metric-value" style="color: var(--domain-social);">80 Points</span>
+                    <span class="metric-subtitle">Siddharth leading</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-social);">
+                    <span class="metric-label">Training Rate</span>
+                    <span class="metric-value" style="color: var(--domain-ai);">100%</span>
+                    <span class="metric-subtitle">DEI Leadership Workshop</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-social);">
+                    <span class="metric-label">Female Ratio</span>
+                    <span class="metric-value" style="color: var(--domain-environmental);">55% Avg</span>
+                    <span class="metric-subtitle">Ops + HR scorecards</span>
+                </div>
+            </div>
+
+            <!-- Sub-Tabs Navigation for Social Module -->
+            <div class="ops-tabs-container" style="margin-top: 20px; margin-bottom: 20px;">
+                <button class="ops-tab-btn active" onclick="switchSubTab('soc', 'csr')">🌳 CSR Activities</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('soc', 'participation')">👥 Employee Participation</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('soc', 'diversity')">📊 Diversity Dashboard</button>
+            </div>
+
+            <!-- Panel 1: CSR Activities Cards -->
+            <div id="subpanel-soc-csr" class="subpanel-soc" style="display: block;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                    <h4 style="margin:0; font-size:18px; color:white;">Active Corporate Social Responsibility Programs</h4>
+                    <button class="action-btn" onclick="showToast('Create new CSR program')" style="background:var(--domain-social); color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">+ New Activity</button>
+                </div>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:20px;">
+                    <!-- Activity 1 -->
+                    <div class="panel-card" style="border-left: 4px solid var(--domain-environmental); display:flex; flex-direction:column; justify-content:space-between; height:200px;">
+                        <div>
+                            <div class="panel-title" style="margin-bottom:8px;">🌲 Tree Plantation</div>
+                            <div style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">24 joined • <strong>Evidence Required</strong></div>
+                            <p style="font-size:12px; color:var(--text-secondary); margin:0;">Reforestation program at Chennai Green belt.</p>
+                        </div>
+                        <button onclick="showToast('Joined Tree Plantation activity successfully!')" style="width:100%; background:var(--domain-environmental); color:white; border:none; padding:8px; border-radius:6px; font-weight:600; cursor:pointer;">Join</button>
+                    </div>
+
+                    <!-- Activity 2 -->
+                    <div class="panel-card" style="border-left: 4px solid var(--domain-alerts); display:flex; flex-direction:column; justify-content:space-between; height:200px;">
+                        <div>
+                            <div class="panel-title" style="margin-bottom:8px;">🩸 Blood Donation</div>
+                            <div style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">18 joined • <strong>Evidence Required</strong></div>
+                            <p style="font-size:12px; color:var(--text-secondary); margin:0;">Voluntary corporate blood drive for city hospitals.</p>
+                        </div>
+                        <button onclick="showToast('Joined Blood Donation drive successfully!')" style="width:100%; background:var(--domain-environmental); color:white; border:none; padding:8px; border-radius:6px; font-weight:600; cursor:pointer;">Join</button>
+                    </div>
+
+                    <!-- Activity 3 -->
+                    <div class="panel-card" style="border-left: 4px solid var(--domain-social); display:flex; flex-direction:column; justify-content:space-between; height:200px;">
+                        <div>
+                            <div class="panel-title" style="margin-bottom:8px;">🏖 Beach Cleanup</div>
+                            <div style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">31 joined • <strong>Open</strong></div>
+                            <p style="font-size:12px; color:var(--text-secondary); margin:0;">Weekend waste collection at Elliot's beach shore.</p>
+                        </div>
+                        <button onclick="showToast('Joined Beach Cleanup initiative successfully!')" style="width:100%; background:var(--domain-environmental); color:white; border:none; padding:8px; border-radius:6px; font-weight:600; cursor:pointer;">Join</button>
+                    </div>
+
+                    <!-- Activity 4 -->
+                    <div class="panel-card" style="border-left: 4px solid var(--domain-ai); display:flex; flex-direction:column; justify-content:space-between; height:200px;">
+                        <div>
+                            <div class="panel-title" style="margin-bottom:8px;">🎓 ESG Workshop</div>
+                            <div style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">52 joined • <strong>Open</strong></div>
+                            <p style="font-size:12px; color:var(--text-secondary); margin:0;">Interactive seminar on circular product materials.</p>
+                        </div>
+                        <button onclick="showToast('Joined ESG Workshop successfully!')" style="width:100%; background:var(--domain-environmental); color:white; border:none; padding:8px; border-radius:6px; font-weight:600; cursor:pointer;">Join</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 2: Employee Participation Queue -->
+            <div id="subpanel-soc-participation" class="subpanel-soc" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Employee Volunteer Participation Log & Queue</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Employee Name</th>
+                                <th>Activity/Challenge</th>
+                                <th>Proof Document</th>
+                                <th>Points Earned</th>
+                                <th>Approval Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Aditi Rao</td>
+                                <td>Tree Plantation</td>
+                                <td><a href="#" onclick="showToast('Previewing photo.jpg evidence document...')" style="color:var(--domain-social); text-decoration:underline;">photo.jpg</a></td>
+                                <td>50 pts</td>
+                                <td><span class="status-badge status-draft">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>Karan Shah</td>
+                                <td>ESG Workshop</td>
+                                <td><a href="#" onclick="showToast('Previewing cert.pdf certificate document...')" style="color:var(--domain-social); text-decoration:underline;">cert.pdf</a></td>
+                                <td>30 pts</td>
+                                <td><span class="status-badge status-approved">Approved</span></td>
+                            </tr>
+                            <tr>
+                                <td>Siddharth</td>
+                                <td>Annual Tree Planting Initiative 2026</td>
+                                <td><a href="#" onclick="showToast('Previewing green_selfie.png doc...')" style="color:var(--domain-social); text-decoration:underline;">green_selfie.png</a></td>
+                                <td>80 pts</td>
+                                <td><span class="status-badge status-approved">Approved</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
+                        <button class="action-btn" onclick="showToast('Aditi Rao participation approved!')" style="background:#10b981; color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer;">Approve</button>
+                        <button class="action-btn" onclick="showToast('Participation request rejected')" style="background:#ef4444; color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer;">Reject</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 3: Diversity Dashboard -->
+            <div id="subpanel-soc-diversity" class="subpanel-soc" style="display: none;">
+                <div class="dashboard-layout" style="grid-template-columns: 1.2fr 1fr;">
+                    <div class="panel-card" style="padding: 24px;">
+                        <div class="panel-title">DEI Diversity Index Scorecards</div>
+                        <div style="display: flex; flex-direction: column; gap: 18px; margin-top:16px;">
+                            <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">
+                                <span>Operations Female Ratio</span>
+                                <span style="font-weight:600; color: var(--domain-social);">40%</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">
+                                <span>HR Female Ratio</span>
+                                <span style="font-weight:600; color: var(--domain-environmental);">70%</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">
+                                <span>Minority Group Workforce Integration</span>
+                                <span style="font-weight:600; color:var(--domain-social);">18%</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding-bottom:8px;">
+                                <span>Average Employee Age</span>
+                                <span style="font-weight:600;">34.8 Years</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rankings list -->
+                    <div class="panel-card" style="padding: 24px;">
+                        <div class="panel-title">CSR Participation Leaderboard</div>
+                        <ul class="leaderboard-list" style="margin-top:16px;">
+                            <li class="leaderboard-item">
+                                <span class="leaderboard-name"><span class="leaderboard-rank">#1</span> Siddharth</span>
+                                <span class="leaderboard-points">80 pts</span>
+                            </li>
+                            <li class="leaderboard-item">
+                                <span class="leaderboard-name"><span class="leaderboard-rank">#2</span> Dhayanithi M U</span>
+                                <span class="leaderboard-points">60 pts</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. VIEW SECTION: GOVERNANCE (Compliance Center) -->
+        <div id="view-governance" class="view-section">
+            <!-- Governance KPIs -->
+            <div class="metrics-grid">
+                <div class="metric-card" style="--card-theme-color: var(--domain-governance);">
+                    <span class="metric-label">Compliance Status</span>
+                    <span class="metric-value" style="color: var(--domain-alerts);">High Risk</span>
+                    <span class="metric-subtitle">1 open issue</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-governance);">
+                    <span class="metric-label">Active Policies</span>
+                    <span class="metric-value" style="color: var(--domain-social);">2 published</span>
+                    <span class="metric-subtitle">1 draft pending</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-governance);">
+                    <span class="metric-label">Risk index</span>
+                    <span class="metric-value" style="color: var(--domain-ai);">10.6</span>
+                    <span class="metric-subtitle">Medium risk average</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-governance);">
+                    <span class="metric-label">Scheduled Audits</span>
+                    <span class="metric-value" style="color: var(--domain-environmental);">2 checked</span>
+                    <span class="metric-subtitle">1 external non-compliant</span>
+                </div>
+            </div>
+
+            <!-- Sub-Tabs Navigation for Governance Module -->
+            <div class="ops-tabs-container" style="margin-top: 20px; margin-bottom: 20px;">
+                <button class="ops-tab-btn active" onclick="switchSubTab('gov', 'policies')">📄 Policies</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('gov', 'acknowledgments')">🤝 Policy Acknowledgements</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('gov', 'audits')">🏛 Audits</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('gov', 'compliance')">⚠ Compliance Issues</button>
+            </div>
+
+            <!-- Panel 1: Policies -->
+            <div id="subpanel-gov-policies" class="subpanel-gov" style="display: block;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Corporate Compliance Policies</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Policy Title</th>
+                                <th>Version</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Corporate Sustainability Code of Conduct</td>
+                                <td>1.0</td>
+                                <td><span class="status-badge status-approved">Published</span></td>
+                            </tr>
+                            <tr>
+                                <td>Annual Carbon Mitigation & Offsets Policy</td>
+                                <td>2.1</td>
+                                <td><span class="status-badge status-approved">Published</span></td>
+                            </tr>
+                            <tr>
+                                <td>Hazardous Materials Handling & Waste Safety</td>
+                                <td>0.8</td>
+                                <td><span class="status-badge status-draft">Draft</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel 2: Policy Acknowledgements -->
+            <div id="subpanel-gov-acknowledgments" class="subpanel-gov" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Employee Policy Acknowledgements Sign-offs</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Policy Reference</th>
+                                <th>Signature Status</th>
+                                <th>Signing Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Rohan</td>
+                                <td>Corporate Sustainability Code of Conduct</td>
+                                <td><span class="status-badge status-approved">Signed</span></td>
+                                <td>2026-07-04</td>
+                            </tr>
+                            <tr>
+                                <td>Amit</td>
+                                <td>Annual Carbon Mitigation & Offsets Policy</td>
+                                <td><span class="status-badge status-draft">Pending</span></td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>Aditi Rao</td>
+                                <td>Corporate Sustainability Code of Conduct</td>
+                                <td><span class="status-badge status-approved">Signed</span></td>
+                                <td>2026-07-08</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel 3: Audits -->
+            <div id="subpanel-gov-audits" class="subpanel-gov" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                        <div class="panel-title" style="margin-bottom:0;">Scheduled & Completed Audits</div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="action-btn" onclick="openModal('audit')" style="background:var(--domain-governance); color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">+ New Audit</button>
+                            <button class="action-btn" onclick="showToast('Exporting Audit log data...')" style="background:transparent; color:var(--text-secondary); border:1px solid var(--border-color); padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">Export ▾</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Department</th>
+                                <th>Auditor</th>
+                                <th>Date</th>
+                                <th>Findings Summary</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Q2 Waste Audit</td>
+                                <td>Manufacturing</td>
+                                <td>S. Nair</td>
+                                <td>2026-06-12</td>
+                                <td>3 minor issues identified</td>
+                                <td><span class="status-badge status-approved" style="background:rgba(59,130,246,0.15); color:#3b82f6;">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Vendor Compliance Check</td>
+                                <td>Procurement</td>
+                                <td>R. Iyer</td>
+                                <td>2026-07-01</td>
+                                <td>1 open high severity issue</td>
+                                <td><span class="status-badge status-draft">Under Review</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel 4: Compliance Issues & Heat Map -->
+            <div id="subpanel-gov-compliance" class="subpanel-gov" style="display: none;">
+                <!-- Explainable Compliance Card -->
+                <div class="ai-recommendation-card" style="border-color:rgba(139,92,246,0.18); background:linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(7,9,14,0.4) 100%); margin-bottom: 24px;">
+                    <div class="rec-header">
+                        <span class="rec-badge" style="background:rgba(139,92,246,0.15); color:var(--domain-governance);">🏛 AI Compliance Intelligence</span>
+                        <span class="rec-confidence" style="color:var(--domain-environmental);">94% Confidence</span>
+                    </div>
+                    <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Publish pending employee hazard conduct guidelines</h4>
+                    <p style="color: var(--text-secondary); font-size: 13.5px; margin-bottom: 16px;">
+                        <strong>Reason:</strong> Draft conduct policies are pending publication, impacting our external audit scores.
+                    </p>
+                    
+                    <div class="rec-impact-row">
+                        <div class="rec-impact-item">
+                            <span class="rec-impact-label">Evidence</span>
+                            <span class="rec-impact-value">1 Compliance Issue</span>
+                        </div>
+                        <div class="rec-impact-item">
+                            <span class="rec-impact-label">Audit Score Impact</span>
+                            <span class="rec-impact-value" style="color:var(--domain-alerts);">68.0%</span>
+                        </div>
+                        <div class="rec-impact-item">
+                            <span class="rec-impact-label">Affected records</span>
+                            <span class="rec-impact-value">facilities_external</span>
+                        </div>
+                    </div>
+
+                    <button class="ai-why-btn" onclick="toggleWhy(this)" style="color:var(--domain-governance);">
+                        <span>Explain Evidence Details</span> ▾
+                    </button>
+                    <div class="ai-why-details">
+                        <strong>Evidence reasoning:</strong> Audit facilities_external indicates diesel fuel filled in generators was unlogged, causing compliance mismatch. Resolve the diesel draft transaction to automatically clear audit failures.
+                    </div>
+
+                    <div class="rec-actions">
+                        <button class="rec-btn" onclick="rateRecommendation('Governance Policy Alert', 'like')">Helpful 👍</button>
+                        <button class="rec-btn" onclick="rateRecommendation('Governance Policy Alert', 'dislike')">Not Helpful 👎</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-layout">
+                    <!-- Left: Compliance Issues table -->
+                    <div class="panel-card" style="padding: 24px;">
+                        <div class="panel-title">Active Compliance Issues Registry</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Issue Description</th>
+                                    <th>Severity</th>
+                                    <th>Department</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Missing MSDS sheets</td>
+                                    <td><span style="color:#ef4444; font-weight:600;">High</span></td>
+                                    <td>Manufacturing</td>
+                                    <td><span class="status-badge status-draft">Open</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Late vendor disclosure</td>
+                                    <td><span style="color:#fbbf24; font-weight:600;">Medium</span></td>
+                                    <td>Procurement</td>
+                                    <td><span class="status-badge status-approved">Resolved</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Right: Risk Heatmap Grid (Likelihood vs Impact colored mapping) -->
+                    <div>
+                        <div class="panel-card" style="padding: 24px;">
+                            <div class="panel-title">Risk Heat Map Matrix</div>
+                            <div style="font-size:12px; color:var(--text-secondary); margin-bottom: 12px;">Likelihood (1-5) vs Impact (1-5)</div>
+                            
+                            <div class="risk-heatmap-grid">
+                                <!-- Column headers -->
+                                <div></div><div class="matrix-header">1</div><div class="matrix-header">2</div><div class="matrix-header">3</div><div class="matrix-header">4</div><div class="matrix-header">5</div>
+                                
+                                <!-- Row 5 -->
+                                <div class="matrix-header" style="align-self:center;">5</div>
+                                <div class="matrix-cell cell-orange"></div>
+                                <div class="matrix-cell cell-orange"></div>
+                                <div class="matrix-cell cell-red"></div>
+                                <div class="matrix-cell cell-red"></div>
+                                <div class="matrix-cell cell-red"></div>
+
+                                <!-- Row 4 -->
+                                <div class="matrix-header" style="align-self:center;">4</div>
+                                <div class="matrix-cell cell-yellow"></div>
+                                <div class="matrix-cell cell-orange"></div>
+                                <div class="matrix-cell cell-orange"></div>
+                                <div class="matrix-cell cell-red" title="Carbon Tax&#10;&#10;Category: Governance&#10;Likelihood: 4 (Likely)&#10;Impact: 4 (Major)&#10;Risk Score: 16&#10;Owner: Finance Department&#10;Mitigation: Standard carbon allowances, clean tariff purchases&#10;Status: Mitigation Active">
+                                    <div class="risk-tag">Carbon Tax</div>
+                                </div>
+                                <div class="matrix-cell cell-red"></div>
+
+                                <!-- Row 3 -->
+                                <div class="matrix-header" style="align-self:center;">3</div>
+                                <div class="matrix-cell cell-green"></div>
+                                <div class="matrix-cell cell-yellow"></div>
+                                <div class="matrix-cell cell-orange"></div>
+                                <div class="matrix-cell cell-orange" title="Safety Failure&#10;&#10;Category: Social / Governance&#10;Likelihood: 3 (Possible)&#10;Impact: 4 (Major)&#10;Risk Score: 12&#10;Owner: Operations Department&#10;Mitigation: Standard employee safety certifications, weekly site audits&#10;Status: Mitigation Active">
+                                    <div class="risk-tag">Safety Fail</div>
+                                </div>
+                                <div class="matrix-cell cell-red"></div>
+
+                                <!-- Row 2 -->
+                                <div class="matrix-header" style="align-self:center;">2</div>
+                                <div class="matrix-cell cell-green"></div>
+                                <div class="matrix-cell cell-green"></div>
+                                <div class="matrix-cell cell-yellow"></div>
+                                <div class="matrix-cell cell-orange" title="Fuel Spill&#10;&#10;Category: Environmental&#10;Likelihood: 2 (Unlikely)&#10;Impact: 4 (Major)&#10;Risk Score: 8&#10;Owner: Facilities Department&#10;Mitigation: Secondary fuel containment, Monthly inspection&#10;Status: Mitigation Active">
+                                    <div class="risk-tag">Fuel Spill</div>
+                                </div>
+                                <div class="matrix-cell cell-orange"></div>
+
+                                <!-- Row 1 -->
+                                <div class="matrix-header" style="align-self:center;">1</div>
+                                <div class="matrix-cell cell-green"></div>
+                                <div class="matrix-cell cell-green"></div>
+                                <div class="matrix-cell cell-green"></div>
+                                <div class="matrix-cell cell-yellow"></div>
+                                <div class="matrix-cell cell-orange"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. VIEW SECTION: GAMIFICATION -->
+        <div id="view-gamification" class="view-section">
+            <!-- Gamification KPIs -->
+            <div class="metrics-grid">
+                <div class="metric-card" style="--card-theme-color: var(--domain-executive);">
+                    <span class="metric-label">Siddharth points</span>
+                    <span class="metric-value" style="color: var(--domain-environmental);">80 points</span>
+                    <span class="metric-subtitle">Rank: #1</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-social);">
+                    <span class="metric-label">Earned Badges</span>
+                    <span class="metric-value" style="color: var(--domain-social);">3 Badges</span>
+                    <span class="metric-subtitle">Carbon, CSR, ESG</span>
+                </div>
+                <div class="metric-card" style="--card-theme-color: var(--domain-ai);">
+                    <span class="metric-label">Active Challenges</span>
+                    <span class="metric-value" style="color: var(--domain-ai);">1 Active</span>
+                    <span class="metric-subtitle">Plastic-Free week</span>
+                </div>
+            </div>
+
+            <!-- Sub-Tabs Navigation for Gamification Module -->
+            <div class="ops-tabs-container" style="margin-top: 20px; margin-bottom: 20px;">
+                <button class="ops-tab-btn active" onclick="switchSubTab('gam', 'challenges')">🎯 Challenges</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('gam', 'participation')">🏁 Challenge Participation</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('gam', 'badges')">🏅 Badges</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('gam', 'rewards')">🎁 Rewards Catalog</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('gam', 'leaderboard')">🏆 Leaderboard</button>
+            </div>
+
+            <!-- Panel 1: Challenges -->
+            <div id="subpanel-gam-challenges" class="subpanel-gam" style="display: block;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                    <h4 style="margin:0; font-size:18px; color:white;">ESG Gamification Challenges</h4>
+                    <button class="action-btn" onclick="openModal('challenge')" style="background:var(--domain-social); color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">+ New Challenge</button>
+                </div>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:20px;">
+                    <!-- Card 1 -->
+                    <div class="panel-card" style="border-left: 4px solid var(--domain-environmental); height: 180px; display:flex; flex-direction:column; justify-content:space-between;">
+                        <div>
+                            <div class="panel-title" style="margin-bottom:6px;">Sustainability Sprint</div>
+                            <div style="font-size:11px; color:#10b981; font-weight:600; margin-bottom:8px;">Active • 12 participants</div>
+                            <p style="font-size:12px; color:var(--text-secondary); margin:0;">Maximize carbon transaction accuracy audits.</p>
+                        </div>
+                        <span class="status-badge status-approved" style="text-align:center;">Active</span>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="panel-card" style="border-left: 4px solid var(--domain-social); height: 180px; display:flex; flex-direction:column; justify-content:space-between;">
+                        <div>
+                            <div class="panel-title" style="margin-bottom:6px;">Recycle Challenge</div>
+                            <div style="font-size:11px; color:#fbbf24; font-weight:600; margin-bottom:8px;">Under Review • 8 participants</div>
+                            <p style="font-size:12px; color:var(--text-secondary); margin:0;">Zero waste landfill packaging reductions.</p>
+                        </div>
+                        <span class="status-badge status-draft" style="text-align:center;">Under Review</span>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="panel-card" style="border-left: 4px solid var(--domain-ai); height: 180px; display:flex; flex-direction:column; justify-content:space-between;">
+                        <div>
+                            <div class="panel-title" style="margin-bottom:6px;">Commute Green Week</div>
+                            <div style="font-size:11px; color:#3b82f6; font-weight:600; margin-bottom:8px;">Completed • 45 participants</div>
+                            <p style="font-size:12px; color:var(--text-secondary); margin:0;">Voluntary cycling and EV travel to Chennai branch.</p>
+                        </div>
+                        <span class="status-badge status-approved" style="background:rgba(59,130,246,0.15); color:#3b82f6; text-align:center;">Completed</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 2: Challenge Participation -->
+            <div id="subpanel-gam-participation" class="subpanel-gam" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Challenge Participation & Milestones</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Participant</th>
+                                <th>Enrolled Challenge</th>
+                                <th>Milestone Status</th>
+                                <th>Points Logged</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Siddharth</td>
+                                <td>Eco-Office Plastic-Free Week</td>
+                                <td><span style="color:#10b981; font-weight:600;">Completed</span></td>
+                                <td>60 pts</td>
+                            </tr>
+                            <tr>
+                                <td>Dhayanithi M U</td>
+                                <td>Sustainability Sprint</td>
+                                <td><span style="color:#fbbf24; font-weight:600;">80% Progress</span></td>
+                                <td>40 pts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel 3: Badges -->
+            <div id="subpanel-gam-badges" class="subpanel-gam" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Employee Achievement Badges Cabinet</div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; text-align:center; margin-top:20px;">
+                        <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:12px; border: 1px solid var(--border-color);">
+                            <div style="font-size:36px; margin-bottom:8px;">🌱</div>
+                            <div style="font-size:13px; font-weight:700; color:white;">Green Beginner</div>
+                            <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">First Carbon Log</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:12px; border: 1px solid var(--border-color);">
+                            <div style="font-size:36px; margin-bottom:8px;">⚡</div>
+                            <div style="font-size:13px; font-weight:700; color:white;">Carbon Saver</div>
+                            <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">Scope 2 Reductions</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:12px; border: 1px solid var(--border-color);">
+                            <div style="font-size:36px; margin-bottom:8px;">🏅</div>
+                            <div style="font-size:13px; font-weight:700; color:white;">Sustainability Champ</div>
+                            <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">Completed 3 Challenges</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:12px; border: 1px solid var(--border-color);">
+                            <div style="font-size:36px; margin-bottom:8px;">🤝</div>
+                            <div style="font-size:13px; font-weight:700; color:white;">Team Player</div>
+                            <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">DEI Course Completed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 4: Rewards Store -->
+            <div id="subpanel-gam-rewards" class="subpanel-gam" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Points Redemption Store Catalog</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Reward Item Title</th>
+                                <th>Category</th>
+                                <th>Point Cost</th>
+                                <th>Stock Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gamificationTableBodyPage">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel 5: Leaderboard -->
+            <div id="subpanel-gam-leaderboard" class="subpanel-gam" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Overall Sustainability Leaderboard Rankings</div>
+                    <ul class="leaderboard-list" style="margin-top:16px;">
+                        <li class="leaderboard-item">
+                            <span class="leaderboard-name"><span class="leaderboard-rank">#1</span> Siddharth</span>
+                            <span class="leaderboard-points">80 pts</span>
+                        </li>
+                        <li class="leaderboard-item">
+                            <span class="leaderboard-name"><span class="leaderboard-rank">#2</span> Dhayanithi M U</span>
+                            <span class="leaderboard-points">60 pts</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. VIEW SECTION: MASTER CONFIGURATION (Settings) -->
+        <div id="view-config" class="view-section">
+            <!-- Sub-Tabs Navigation for Settings Module -->
+            <div class="ops-tabs-container" style="margin-bottom: 20px;">
+                <button class="ops-tab-btn active" onclick="switchSubTab('cfg', 'departments')">🏢 Departments</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('cfg', 'categories')">🗂 Categories</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('cfg', 'toggles')">⚙ ESG Configuration</button>
+            </div>
+
+            <!-- Panel 1: Departments -->
+            <div id="subpanel-cfg-departments" class="subpanel-cfg" style="display: block;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                        <div class="panel-title" style="margin-bottom:0;">Departments Master configuration</div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="action-btn" onclick="showToast('Add department initiated')" style="background:var(--domain-social); color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">+ New Department</button>
+                            <button class="action-btn" onclick="showToast('Department details modified')" style="background:#fbbf24; color:black; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">Edit</button>
+                            <button class="action-btn" onclick="showToast('Department deleted')" style="background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer;">Delete</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th>Head</th>
+                                <th>Parent Dept</th>
+                                <th>Employees</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Manufacturing</td>
+                                <td>MFC</td>
+                                <td>S. Nair</td>
+                                <td>—</td>
+                                <td>134</td>
+                                <td><span class="status-badge status-approved">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Logistics</td>
+                                <td>LOG</td>
+                                <td>R. Iyer</td>
+                                <td>Manufacturing</td>
+                                <td>58</td>
+                                <td><span class="status-badge status-approved">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Corporate</td>
+                                <td>COF</td>
+                                <td>A. Mehta</td>
+                                <td>—</td>
+                                <td>41</td>
+                                <td><span class="status-badge status-approved">Active</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel 2: Categories -->
+            <div id="subpanel-cfg-categories" class="subpanel-cfg" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Resource Category Emission Factors Registry</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Resource Category</th>
+                                <th>Conversion factor value</th>
+                                <th>Reference standard</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Diesel Fuel (Scope 1)</td>
+                                <td>0.00268 tCO2e / Liter</td>
+                                <td>IPCC Guideline Ref 2026</td>
+                            </tr>
+                            <tr>
+                                <td>Electricity India CEA Grid (Scope 2)</td>
+                                <td>0.00082 tCO2e / kWh</td>
+                                <td>CEA National Grid India 2026</td>
+                            </tr>
+                            <tr>
+                                <td>Aviation Travel Global (Scope 3)</td>
+                                <td>0.00015 tCO2e / km</td>
+                                <td>ICAO Carbon Calculator v4</td>
+                            </tr>
+                            <tr>
+                                <td>Landfill Municipal Waste (Scope 3)</td>
+                                <td>0.29000 tCO2e / Ton</td>
+                                <td>EPA Waste Reduction Model</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel 3: ESG Configuration Toggles -->
+            <div id="subpanel-cfg-toggles" class="subpanel-cfg" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title" style="margin-bottom: 24px;">ESG Configuration & Notifications</div>
+                    <div style="display:flex; flex-direction:column; gap:20px; max-width: 600px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <strong style="color:white; display:block; margin-bottom:4px;">Enable auto emission calculation</strong>
+                                <span style="font-size:12px; color:var(--text-secondary);">Directly post carbon ledger entries on invoice validation.</span>
+                            </div>
+                            <input type="checkbox" checked onclick="showToast('Auto calculation setting toggled')" style="width:20px; height:20px; cursor:pointer;">
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px solid rgba(255,255,255,0.05); padding-top:16px;">
+                            <div>
+                                <strong style="color:white; display:block; margin-bottom:4px;">Require evidence for all CSR activities</strong>
+                                <span style="font-size:12px; color:var(--text-secondary);">Enforce file attachment uploads on employee volunteer log submissions.</span>
+                            </div>
+                            <input type="checkbox" onclick="showToast('Evidence requirement setting toggled')" style="width:20px; height:20px; cursor:pointer;">
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px solid rgba(255,255,255,0.05); padding-top:16px;">
+                            <div>
+                                <strong style="color:white; display:block; margin-bottom:4px;">Auto-award badges on challenge completion</strong>
+                                <span style="font-size:12px; color:var(--text-secondary);">Automatically distribute reward badges to employees on milestone completion.</span>
+                            </div>
+                            <input type="checkbox" checked onclick="showToast('Auto badge settings toggled')" style="width:20px; height:20px; cursor:pointer;">
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px solid rgba(255,255,255,0.05); padding-top:16px;">
+                            <div>
+                                <strong style="color:white; display:block; margin-bottom:4px;">Email alerts for new compliance issues</strong>
+                                <span style="font-size:12px; color:var(--text-secondary);">Send instant notifications to compliance officers on audit variances.</span>
+                            </div>
+                            <input type="checkbox" onclick="showToast('Compliance notification toggled')" style="width:20px; height:20px; cursor:pointer;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7.5. VIEW SECTION: REPORTS -->
+        <div id="view-reports" class="view-section">
+            <!-- Sub-Tabs Navigation for Reports Module -->
+            <div class="ops-tabs-container" style="margin-bottom: 20px;">
+                <button class="ops-tab-btn" onclick="switchSubTab('rpt', 'environmental')">🌱 Environmental Report</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('rpt', 'social')">👥 Social Report</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('rpt', 'governance')">🏛 Governance Report</button>
+                <button class="ops-tab-btn" onclick="switchSubTab('rpt', 'summary')">📋 ESG Summary</button>
+                <button class="ops-tab-btn active" onclick="switchSubTab('rpt', 'custom')">🛠️ Custom Builder</button>
+            </div>
+
+            <!-- Panel 1: Environmental Report -->
+            <div id="subpanel-rpt-environmental" class="subpanel-rpt" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Environmental Report Overview</div>
+                    <p style="color:var(--text-secondary); line-height:1.6;">Contains detailed direct/indirect emission values aggregated from Odoo transaction ledgers, active reduction goals compliance tracking, and product profiles lifecycle circularity scores.</p>
+                    <button class="action-btn" onclick="generateReport()" style="background:var(--domain-environmental); color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer;">Generate PDF</button>
+                </div>
+            </div>
+
+            <!-- Panel 2: Social Report -->
+            <div id="subpanel-rpt-social" class="subpanel-rpt" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Social Report Overview</div>
+                    <p style="color:var(--text-secondary); line-height:1.6;">Aggregates employee diversity dashboards statistics, corporate social volunteering logs, accrued gamification point balances, and training workshop milestone completion ratios.</p>
+                    <button class="action-btn" onclick="generateReport()" style="background:var(--domain-social); color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer;">Generate PDF</button>
+                </div>
+            </div>
+
+            <!-- Panel 3: Governance Report -->
+            <div id="subpanel-rpt-governance" class="subpanel-rpt" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Governance Report Overview</div>
+                    <p style="color:var(--text-secondary); line-height:1.6;">Aggregates published corporate conduct policies status registries, employee acknowledgments signature ratios, audit issues findings, and active risk heat map registries.</p>
+                    <button class="action-btn" onclick="generateReport()" style="background:var(--domain-governance); color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer;">Generate PDF</button>
+                </div>
+            </div>
+
+            <!-- Panel 4: ESG Summary -->
+            <div id="subpanel-rpt-summary" class="subpanel-rpt" style="display: none;">
+                <div class="panel-card" style="padding: 24px;">
+                    <div class="panel-title">Executive ESG Summary overview</div>
+                    <p style="color:var(--text-secondary); line-height:1.6;">Consolidates all 4 scores (Environmental, Social, Governance, and Weighted ESG Score) into a clean executive dashboard layout template for stakeholder communications.</p>
+                    <button class="action-btn" onclick="generateReport()" style="background:var(--domain-social); color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer;">Generate PDF</button>
+                </div>
+            </div>
+
+            <!-- Panel 5: Custom Builder -->
+            <div id="subpanel-rpt-custom" class="subpanel-rpt" style="display: block;">
+                <div class="panel-card" style="padding: 24px; margin-bottom: 24px;">
+                    <div class="panel-title" style="margin-bottom: 16px;">Custom Report Builder Filters</div>
+                    <form onsubmit="runCustomReport(event)">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label style="font-size:12px; margin-bottom:6px;">Date Range</label>
+                                <select>
+                                    <option>Current Month</option>
+                                    <option>Q1 2026</option>
+                                    <option>Q2 2026</option>
+                                    <option>Annual Year</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label style="font-size:12px; margin-bottom:6px;">Department</label>
+                                <select>
+                                    <option>All Departments</option>
+                                    <option>Operations</option>
+                                    <option>Logistics</option>
+                                    <option>HR</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label style="font-size:12px; margin-bottom:6px;">Module</label>
+                                <select>
+                                    <option>All Modules</option>
+                                    <option>Carbon accounting</option>
+                                    <option>CSR Volunteering</option>
+                                    <option>Governance Compliance</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label style="font-size:12px; margin-bottom:6px;">Employee</label>
+                                <select>
+                                    <option>All Employees</option>
+                                    <option>Siddharth</option>
+                                    <option>Aditi Rao</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label style="font-size:12px; margin-bottom:6px;">ESG Category</label>
+                                <select>
+                                    <option>All Categories</option>
+                                    <option>Scope 1</option>
+                                    <option>Scope 2</option>
+                                    <option>DEI Diversity</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:12px; justify-content:flex-end;">
+                            <button type="submit" style="background:#10b981; color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer;">▶ Run Report</button>
+                            <button type="button" onclick="generateReport()" style="background:transparent; color:#fff; border:1px solid var(--border-color); padding:10px 18px; border-radius:8px; font-weight:600; cursor:pointer;">Export PDF</button>
+                            <button type="button" onclick="showToast('Exported CSV template')" style="background:transparent; color:#fff; border:1px solid var(--border-color); padding:10px 18px; border-radius:8px; font-weight:600; cursor:pointer;">Export CSV</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. VIEW SECTION: AI ADVISOR -->
+        <div id="view-ai" class="view-section">
+            <div class="panel-card" style="border-left: 4px solid var(--domain-ai);">
+                <div class="panel-title" style="color:var(--domain-ai);">🤖 EcoSphere AI Decision Intelligence</div>
+                <p style="color:var(--text-secondary); margin-bottom: 24px;">This module acts as the strategic advising engine. You can ask suggestions, and provide ratings 👍 / 👎 which persist feedback back into Odoo consultation history tables.</p>
+                <div class="chat-container" style="height: 480px;">
+                    <div class="chat-messages" id="mainAdvisorMessages">
+                        <div class="message bot">
+                            Hello! I am the EcoSphere AI Advisor. I have read the Odoo calculated database statistics (ESG Score: 81.1, Health: Good). Type any queries below to obtain context-aware decisions.
+                        </div>
+                    </div>
+                    <div class="chat-input-bar">
+                        <input type="text" id="mainAdvisorInput" placeholder="Ask AI Advisor e.g. Suggest points strategy..." onkeydown="if(event.key === 'Enter') sendAdvisorQuery()">
+                        <button onclick="sendAdvisorQuery()" style="background:var(--domain-ai);">Ask Advisor</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL OVERLAYS -->
+    <div id="modalOverlay" class="modal-overlay">
+        <!-- Carbon Form -->
+        <div class="modal-card" id="modal-carbon" style="display:none;">
+            <div class="modal-header">
+                <span>🌱 Log Carbon Transaction</span>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <form id="carbonForm" onsubmit="submitForm('carbon', event)">
+                <div class="form-group">
+                    <label>Activity Description</label>
+                    <input type="text" id="tx_desc" required placeholder="e.g. Headquarters Utility Grid usage">
+                </div>
+                <div class="form-group">
+                    <label>Activity Type</label>
+                    <select id="tx_type">
+                        <option value="electricity">Electricity Grid (Scope 2)</option>
+                        <option value="stationary_combustion">Diesel Fuel (Scope 1)</option>
+                        <option value="aviation">Aviation Travel (Scope 3)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" id="tx_qty" required placeholder="e.g. 5000">
+                </div>
+                <div class="form-group">
+                    <label>Emission Factor Conversion Ref</label>
+                    <select id="tx_factor">
+                        <option value="0.00268">Diesel Fuel (0.00268 tCO2e/L)</option>
+                        <option value="0.00082">Electricity Grid India (0.00082 tCO2e/kWh)</option>
+                        <option value="0.00015">Aviation Global (0.00015 tCO2e/km)</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="modal-submit">Log Transaction</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- CSR Hours Form -->
+        <div class="modal-card" id="modal-csr" style="display:none;">
+            <div class="modal-header">
+                <span>👥 Log Volunteer Participation</span>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <form id="csrForm" onsubmit="submitForm('csr', event)">
+                <div class="form-group">
+                    <label>Volunteer Name</label>
+                    <input type="text" id="csr_name" required placeholder="e.g. Dhayanithi M U">
+                </div>
+                <div class="form-group">
+                    <label>CSR Event</label>
+                    <input type="text" id="csr_event" required placeholder="e.g. Annual Tree Planting Initiative 2026">
+                </div>
+                <div class="form-group">
+                    <label>Hours Logged</label>
+                    <input type="number" id="csr_hours" required placeholder="e.g. 10">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="modal-submit">Submit Hours</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Audit Form -->
+        <div class="modal-card" id="modal-audit" style="display:none;">
+            <div class="modal-header">
+                <span>🏛 Schedule Compliance Audit</span>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <form id="auditForm" onsubmit="submitForm('audit', event)">
+                <div class="form-group">
+                    <label>Audit Name</label>
+                    <input type="text" id="audit_name" required placeholder="e.g. Q3 Energy Efficiency Audit">
+                </div>
+                <div class="form-group">
+                    <label>Audit Type</label>
+                    <select id="audit_type">
+                        <option value="internal">Internal</option>
+                        <option value="external">External</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Target Date</label>
+                    <input type="date" id="audit_date" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="modal-submit">Schedule</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Challenge Form -->
+        <div class="modal-card" id="modal-challenge" style="display:none;">
+            <div class="modal-header">
+                <span>⭐ Create Challenge</span>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <form id="challengeForm" onsubmit="submitForm('challenge', event)">
+                <div class="form-group">
+                    <label>Challenge Name</label>
+                    <input type="text" id="challenge_name" required placeholder="e.g. Carbon Champ Commute">
+                </div>
+                <div class="form-group">
+                    <label>Reward Points</label>
+                    <input type="number" id="challenge_points" required placeholder="e.g. 150">
+                </div>
+                <div class="form-group">
+                    <label>Target Badge</label>
+                    <select id="challenge_badge">
+                        <option value="Carbon Champ">Carbon Champ</option>
+                        <option value="CSR Advocate">CSR Advocate</option>
+                        <option value="ESG Specialist">ESG Specialist</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="modal-submit">Create</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Executive Report Print Modal -->
+        <div class="modal-card" id="modal-report" style="display:none; width: 680px;">
+            <div class="modal-header">
+                <span>📋 Generated Executive ESG Report</span>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <div id="reportPrintArea" style="max-height: 480px; overflow-y: auto; padding: 20px; background: #0c101b; border: 1px solid var(--border-color); border-radius: 12px; font-size: 14px; line-height: 1.6; color:#fff;">
+                <h2 style="text-align:center; margin-bottom:20px; font-weight:700; color:var(--domain-environmental);">ECOSPHERE AI - ESG EXECUTIVE REPORT</h2>
+                <hr style="border-color:var(--border-color); margin-bottom:20px;">
+                <p><strong>Date Generated:</strong> 2026-07-12</p>
+                <p><strong>Audited Corporation:</strong> Adani ESG Corp (India)</p>
+                <p><strong>Overall ESG Index Score:</strong> <span style="color:var(--domain-environmental); font-weight:700;">81.1 / 100 (Good)</span></p>
+                
+                <h4 style="margin-top:20px; color:var(--domain-social);">1. Executive Summary</h4>
+                <p>Adani ESG Corp has successfully consolidated its Sprints 1 to 9 Odoo modules calculations. Overall corporate environmental capping targets are fully met under Operations. Volunteer hours log averages Siddharth (80 pts) leading engagement. Compliance issues status are currently under audit review.</p>
+
+                <h4 style="margin-top:20px; color:var(--domain-social);">2. Department Performance Indexes</h4>
+                <ul>
+                    <li><strong>Operations (Worst)</strong>: 9.84 Tons CO2e (electricity grid loading)</li>
+                    <li><strong>Facilities</strong>: 4.02 Tons CO2e (diesel generator draft fills)</li>
+                    <li><strong>HR (Best)</strong>: 0.00 Tons CO2e</li>
+                </ul>
+
+                <h4 style="margin-top:20px; color:var(--domain-social);">3. AI Advisory Risk Register Mitigation Recommendations</h4>
+                <p>Based on unlogged diesel generator compliance issues (1.50 Tons CO2e), the AI Advisor predicts that transitioning facilities fuel equipment to solar rooftop grid units reduces direct greenhouse output by 12.0 Tons annually, yielding an estimated cost saving of ₹2.8 Lakhs with a 91% confidence rating.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-cancel" onclick="closeModal()">Close</button>
+                <button class="modal-submit" onclick="printReport()">Export PDF / Print</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Setup Emissions Breakdown Chart (Dashboard page)
+        const ctx = document.getElementById('emissionsChart').getContext('2d');
+        const emissionsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['2023', 'Q1', 'Q3', 'Q4'],
+                datasets: [
+                    {
+                        label: 'Scope 1',
+                        data: [6.2, 5.8, 5.1, 4.02],
+                        backgroundColor: '#1e3a8a',
+                        borderWidth: 0
+                    },
+                    {
+                        label: 'Scope 2',
+                        data: [8.4, 7.6, 9.2, 9.84],
+                        backgroundColor: '#3b82f6',
+                        borderWidth: 0
+                    },
+                    {
+                        label: 'Scope 3',
+                        data: [1.2, 0.8, 1.5, 0.0],
+                        backgroundColor: '#93c5fd',
+                        borderWidth: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: { display: false },
+                        ticks: { color: '#9ca3af' }
+                    },
+                    y: {
+                        stacked: true,
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#9ca3af' }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: { color: '#9ca3af', boxWidth: 12 }
+                    }
+                }
+            }
+        });
+
+        // Setup Carbon Forecast Chart
+        const fctx = document.getElementById('forecastChart').getContext('2d');
+        const forecastChart = new Chart(fctx, {
+            type: 'line',
+            data: {
+                labels: ['June (Actual)', 'July (Current)', 'August (AI Forecast)', 'September (AI Forecast)', 'October (AI Forecast)'],
+                datasets: [{
+                    label: 'Carbon Load footprint (CO2-eq Tons)',
+                    data: [14.2, 9.84, 9.12, 8.4, 7.12],
+                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                    borderColor: '#06b6d4',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#06b6d4',
+                    tension: 0.35,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#9ca3af' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#9ca3af' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        let loadedData = null;
+
+        function safeSetText(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = text;
+        }
+
+        function safeSetHtml(id, html) {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = html;
+        }
+
+        // Fetch data on load
+        function loadDashboardData() {
+            fetch('/api/data')
+                .then(res => res.json())
+                .then(data => {
+                    loadedData = data;
+                    renderData(data);
+                })
+                .catch(err => console.error("Error loading metrics:", err));
+        }
+
+        function renderData(data) {
+            safeSetText('ceo-esg-score', data.esg_score.toFixed(1) + ' / 100');
+
+            const scope1 = data.carbon_transactions.filter(t => t.type.includes('Scope 1')).reduce((sum, t) => sum + t.co2, 0);
+            const scope2 = data.carbon_transactions.filter(t => t.type.includes('Scope 2')).reduce((sum, t) => sum + t.co2, 0);
+            const scope3 = data.carbon_transactions.filter(t => t.type.includes('Scope 3')).reduce((sum, t) => sum + t.co2, 0);
+            
+            safeSetText('env-scope1-val', scope1.toFixed(2) + ' t');
+            safeSetText('env-scope2-val', scope2.toFixed(2) + ' t');
+            safeSetText('env-scope3-val', scope3.toFixed(2) + ' t');
+            safeSetText('ceo-carbon-val', (scope1 + scope2 + scope3).toFixed(2) + ' t');
+            
+            // Render environmental page table
+            const envTbody = document.getElementById('carbonTableBodyPage');
+            if (envTbody) {
+                envTbody.innerHTML = '';
+                data.carbon_transactions.forEach(tx => {
+                    envTbody.innerHTML += `
+                        <tr>
+                            <td>${tx.date}</td>
+                            <td>${tx.name}</td>
+                            <td>${tx.type}</td>
+                            <td>${tx.qty}</td>
+                            <td>${tx.co2.toFixed(2)} Tons</td>
+                            <td><span class="status-badge ${tx.status === 'Approved' ? 'status-approved' : 'status-draft'}">${tx.status}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // Update main emissions bar chart on Executive tab (Q4 represents current month data)
+            if (window.emissionsChart) {
+                emissionsChart.data.datasets[0].data[3] = scope1 || 220;
+                emissionsChart.data.datasets[1].data[3] = scope2 || 250;
+                emissionsChart.data.datasets[2].data[3] = scope3 || 180;
+                emissionsChart.update();
+            }
+
+            // Update line forecast chart
+            if (window.forecastChart) {
+                forecastChart.data.datasets[0].data[1] = scope1 + scope2 + scope3;
+                forecastChart.update();
+            }
+
+            // Render Social page table
+            const socialTbody = document.getElementById('socialTableBodyPage');
+            if (socialTbody) {
+                socialTbody.innerHTML = '';
+                data.csr_activities.forEach(act => {
+                    socialTbody.innerHTML += `
+                        <tr>
+                            <td>${act.volunteer}</td>
+                            <td>${act.event}</td>
+                            <td>${act.hours}</td>
+                            <td>${act.points}</td>
+                            <td>${act.date}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // Render rewards catalog
+            const gamiTbody = document.getElementById('gamificationTableBodyPage');
+            if (gamiTbody) {
+                gamiTbody.innerHTML = '';
+                data.rewards.forEach(rw => {
+                    gamiTbody.innerHTML += `
+                        <tr>
+                            <td>${rw.name}</td>
+                            <td>Reward store catalog item</td>
+                            <td>${rw.cost}</td>
+                            <td><span class="status-badge status-approved">Stock: ${rw.stock}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        // Switch user role view dynamically
+        function switchRole(roleName) {
+            document.getElementById('profileName').innerText = 'Sustainability ' + roleName;
+            document.getElementById('avatarIcon').innerText = roleName.slice(0, 2).toUpperCase();
+
+            // Role Permission Matrix configurations
+            const rolePermissions = {
+                'CEO': ['dashboard', 'operations', 'environmental', 'social', 'governance', 'gamification', 'reports', 'config', 'ai'],
+                'Sustainability Manager': ['environmental', 'ai', 'reports'],
+                'Compliance Officer': ['governance', 'ai', 'reports'],
+                'Department Manager': ['operations', 'social', 'ai', 'reports'],
+                'Employee': ['social', 'gamification', 'ai'],
+                'Auditor': ['dashboard', 'environmental', 'governance', 'config', 'reports']
+            };
+
+            const allowedViews = rolePermissions[roleName] || [];
+
+            // 1. Hide/show sidebar menu links based on allowedViews list
+            const sidebarLinks = document.querySelectorAll('.nav-links li');
+            sidebarLinks.forEach(li => {
+                const a = li.querySelector('a');
+                if (a) {
+                    const onclickAttr = a.getAttribute('onclick');
+                    let viewName = '';
+                    if (onclickAttr.includes("'dashboard'")) viewName = 'dashboard';
+                    else if (onclickAttr.includes("'operations'")) viewName = 'operations';
+                    else if (onclickAttr.includes("'environmental'")) viewName = 'environmental';
+                    else if (onclickAttr.includes("'social'")) viewName = 'social';
+                    else if (onclickAttr.includes("'governance'")) viewName = 'governance';
+                    else if (onclickAttr.includes("'gamification'")) viewName = 'gamification';
+                    else if (onclickAttr.includes("'reports'")) viewName = 'reports';
+                    else if (onclickAttr.includes("'config'")) viewName = 'config';
+                    else if (onclickAttr.includes("'ai'")) viewName = 'ai';
+
+                    if (allowedViews.includes(viewName)) {
+                        li.style.display = 'block';
+                    } else {
+                        li.style.display = 'none';
+                    }
+                }
+            });
+
+            // 2. Hide/show Quick Action buttons based on active role permissions
+            const qaBar = document.getElementById('panel-quick-actions');
+            if (qaBar) {
+                if (roleName === 'Employee') {
+                    qaBar.style.display = 'none';
+                } else {
+                    qaBar.style.display = 'grid';
+                    const buttons = qaBar.querySelectorAll('button');
+                    // buttons[0] = Log Carbon
+                    // buttons[1] = Log Volunteer Hours
+                    // buttons[2] = Schedule Audit
+                    // buttons[3] = Create Challenge
+                    // buttons[4] = Generate ESG Report
+                    
+                    buttons[0].style.display = (roleName === 'CEO' || roleName === 'Sustainability Manager') ? 'inline-flex' : 'none';
+                    buttons[1].style.display = (roleName === 'CEO' || roleName === 'Department Manager') ? 'inline-flex' : 'none';
+                    buttons[2].style.display = (roleName === 'CEO' || roleName === 'Compliance Officer') ? 'inline-flex' : 'none';
+                    buttons[3].style.display = (roleName === 'CEO' || roleName === 'Department Manager') ? 'inline-flex' : 'none';
+                    buttons[4].style.display = (roleName === 'CEO' || roleName === 'Sustainability Manager' || roleName === 'Compliance Officer' || roleName === 'Auditor') ? 'inline-flex' : 'none';
+                }
+            }
+
+            // 3. Automatically route view if current active tab is restricted
+            const currentActiveLink = document.querySelector('.nav-item.active');
+            let currentView = 'dashboard';
+            if (currentActiveLink) {
+                const click = currentActiveLink.getAttribute('onclick');
+                if (click.includes("'dashboard'")) currentView = 'dashboard';
+                else if (click.includes("'operations'")) currentView = 'operations';
+                else if (click.includes("'environmental'")) currentView = 'environmental';
+                else if (click.includes("'social'")) currentView = 'social';
+                else if (click.includes("'governance'")) currentView = 'governance';
+                else if (click.includes("'gamification'")) currentView = 'gamification';
+                else if (click.includes("'reports'")) currentView = 'reports';
+                else if (click.includes("'config'")) currentView = 'config';
+                else if (click.includes("'ai'")) currentView = 'ai';
+            }
+
+            if (!allowedViews.includes(currentView)) {
+                // Redirect to first allowed view of the new role
+                const firstAllowed = allowedViews[0];
+                switchView(firstAllowed);
+            }
+        }
+
+        // Switch modular view section
+        function switchView(viewName) {
+            document.querySelectorAll('.view-section').forEach(section => {
+                section.classList.remove('active-view');
+            });
+            document.getElementById('view-' + viewName).classList.add('active-view');
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active', 'env-active', 'soc-active', 'gov-active', 'ai-active');
+            });
+            
+            const sidebarLinks = document.querySelectorAll('.nav-links li a');
+            sidebarLinks.forEach(link => {
+                const onclickAttr = link.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes(`'${viewName}'`)) {
+                    link.classList.add('active');
+                    if (viewName === 'environmental') link.classList.add('env-active');
+                    if (viewName === 'social') link.classList.add('soc-active');
+                    if (viewName === 'governance') link.classList.add('gov-active');
+                    if (viewName === 'ai') link.classList.add('ai-active');
+                }
+            });
+
+            // Adjust main metrics grid visibility (safe check wrapper)
+            const esgScoreEl = document.getElementById('ceo-esg-score');
+            if (esgScoreEl && esgScoreEl.parentElement && esgScoreEl.parentElement.parentElement) {
+                if (viewName === 'dashboard') {
+                    esgScoreEl.parentElement.parentElement.style.display = 'grid';
+                } else {
+                    esgScoreEl.parentElement.parentElement.style.display = 'none';
+                }
+            }
+
+            const titles = {
+                'dashboard': ['Executive Dashboard', 'Consolidated Sustainability Scoring Metrics'],
+                'operations': ['Business Operations Hub', 'Purchase Invoices, Manufacturing, Fleet, and Travel logs'],
+                'environmental': ['Carbon Center', 'Environmental Analytics & Carbon Ledger'],
+                'social': ['CSR Center', 'Employee Engagement & Diversity Analytics'],
+                'governance': ['Governance Center', 'Compliance Registry & Risk Matrix'],
+                'gamification': ['Gamification Cabinet', 'Sustainability Challenges & Rewards Catalog'],
+                'reports': ['Compliance & ESG Reporting Center', 'Compile Custom ESG summaries, audit reports, and exports'],
+                'config': ['Master Configuration Registries', 'ERP Departments, Products, Categories, and Conversion factors'],
+                'ai': ['AI Decision Intelligence', 'Strategic Advisory & Recommendation Simulator']
+            };
+            document.getElementById('header-view-title').innerText = titles[viewName][0];
+            document.getElementById('header-view-subtitle').innerText = titles[viewName][1];
+        }
+
+        // Operations tab switching inside Business Ops tab
+        function switchOpsTab(tabName) {
+            document.querySelectorAll('.ops-panel').forEach(panel => {
+                panel.style.display = 'none';
+            });
+            document.getElementById('ops-' + tabName).style.display = 'block';
+
+            document.querySelectorAll('.ops-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Why toggle
+        function toggleWhy(btn) {
+            const details = btn.nextElementSibling;
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+                btn.innerHTML = '<span>View Evidence Details</span> ▾';
+            } else {
+                details.style.display = 'block';
+                btn.innerHTML = '<span>Hide Evidence Details</span> ▴';
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toastNotification');
+            if (!toast) return;
+            toast.innerText = message;
+            if (type === 'error') {
+                toast.style.background = 'rgba(239, 68, 68, 0.95)';
+                toast.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            } else {
+                toast.style.background = 'rgba(16, 185, 129, 0.95)';
+                toast.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+            }
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // AI Feedback registers
+        function rateRecommendation(recName, rating) {
+            showToast(`AI Feedback saved: ${recName} [${rating.toUpperCase()}]`);
+        }
+
+        // Scenario Simulator slider calculation
+        function updateSimulation(val) {
+            document.getElementById('simSliderVal').innerText = val + '%';
+            if (!loadedData) return;
+
+            const baseEmissions = 9.84;
+            const reductionRatio = (val / 100.0) * 0.3; // max 30% reduction
+            const currentEmissions = baseEmissions * (1 - reductionRatio);
+            
+            const savings = (val / 100.0) * 14;
+            const esgBase = 81.1;
+            const esgShift = esgBase + (val / 100.0) * (89.0 - esgBase);
+            
+            document.getElementById('simCarbonVal').innerText = currentEmissions.toFixed(2) + ' Tons';
+            document.getElementById('simSavingsVal').innerText = '₹' + savings.toFixed(1) + ' Lakhs';
+            document.getElementById('simScoreVal').innerText = esgShift.toFixed(1);
+            document.getElementById('simGoalVal').innerText = 'Safe';
+        }
+
+        // submit operations workflow chain calculation
+        function submitOps(type, event) {
+            event.preventDefault();
+            if (!loadedData) return;
+
+            let desc = '';
+            let qty = 0;
+            let co2 = 0;
+            let scope = '';
+
+            if (type === 'purchase') {
+                desc = document.getElementById('ops_pur_ref').value;
+                qty = parseFloat(document.getElementById('ops_pur_qty').value);
+                const ef = 0.00082; // CEA India grid EF
+                co2 = qty * ef;
+                scope = 'Scope 2 (Indirect)';
+                showToast(`Invoice posted! Created transaction: ${co2.toFixed(2)} Tons CO2e`);
+            } else if (type === 'mfg') {
+                desc = document.getElementById('ops_mfg_ref').value;
+                qty = parseFloat(document.getElementById('ops_mfg_qty').value);
+                const ef = 0.00082;
+                co2 = qty * ef;
+                scope = 'Scope 2 (Indirect)';
+                showToast(`Work Order processed! Created transaction: ${co2.toFixed(2)} Tons CO2e`);
+            } else if (type === 'fleet') {
+                desc = document.getElementById('ops_flt_ref').value;
+                qty = parseFloat(document.getElementById('ops_flt_qty').value);
+                const ef = 0.00268; // Diesel combustion factor
+                co2 = qty * ef;
+                scope = 'Scope 1 (Direct)';
+                showToast(`Fuel consumption logged! Created transaction: ${co2.toFixed(2)} Tons CO2e`);
+            } else if (type === 'expenses') {
+                desc = document.getElementById('ops_exp_ref').value;
+                qty = parseFloat(document.getElementById('ops_exp_qty').value);
+                const ef = 0.00015; // Aviation factor
+                co2 = qty * ef;
+                scope = 'Scope 3 (Other)';
+                showToast(`Expense approved! Created transaction: ${co2.toFixed(2)} Tons CO2e`);
+            }
+
+            // Post calculated Carbon Transaction to ledger state
+            loadedData.carbon_transactions.unshift({
+                date: new Date().toISOString().split('T')[0],
+                name: desc + ' [posted from operations]',
+                type: scope,
+                qty: qty.toLocaleString() + ' units',
+                co2: co2,
+                status: 'Approved'
+            });
+
+            renderData(loadedData);
+            switchView('environmental');
+        }
+
+        // Modals
+        function openModal(type) {
+            document.getElementById('modalOverlay').style.display = 'flex';
+            document.querySelectorAll('.modal-card').forEach(card => card.style.display = 'none');
+            document.getElementById('modal-' + type).style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+
+        function generateReport() {
+            openModal('report');
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        // Form submission
+        function submitForm(type, event) {
+            event.preventDefault();
+            if (!loadedData) return;
+
+            const activeRole = document.getElementById('roleSelector').value;
+            let path = '/api/action';
+            let postBody = { type: type };
+
+            if (type === 'carbon') {
+                path = '/api/carbon/add';
+                const desc = document.getElementById('tx_desc').value;
+                const activity = document.getElementById('tx_type').value;
+                const qty = parseFloat(document.getElementById('tx_qty').value);
+                const factor = parseFloat(document.getElementById('tx_factor').value);
+                
+                const co2 = qty * factor;
+                const typeStr = activity === 'electricity' ? 'Scope 2 (Indirect)' : (activity === 'aviation' ? 'Scope 3 (Other)' : 'Scope 1 (Direct)');
+                postBody = {
+                    name: desc,
+                    type: typeStr,
+                    qty: qty.toLocaleString() + ' units',
+                    co2: co2,
+                    date: new Date().toISOString().split('T')[0]
+                };
+            } else if (type === 'audit') {
+                path = '/api/audit/schedule';
+                const name = document.getElementById('audit_name').value;
+                const kind = document.getElementById('audit_type').value;
+                const dt = document.getElementById('audit_date').value;
+                postBody = { name: name, type: kind, date: dt };
+            } else if (type === 'csr') {
+                path = '/api/csr/log';
+                const name = document.getElementById('csr_name').value;
+                const eventName = document.getElementById('csr_event').value;
+                const hours = parseFloat(document.getElementById('csr_hours').value);
+                postBody = {
+                    volunteer: name,
+                    event: eventName,
+                    hours: hours + ' Hours',
+                    points: (hours * 10) + ' Points',
+                    date: new Date().toISOString().split('T')[0]
+                };
+            }
+
+            // Perform POST to mock server to check backend authorization rules
+            fetch(path, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-User-Role': activeRole
+                },
+                body: JSON.stringify(postBody)
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(err => { throw new Error(err.error || 'Server error'); });
+                }
+                return res.json();
+            })
+            .then(resData => {
+                let viewToSwitch = '';
+                if (type === 'carbon') {
+                    showToast(`Carbon transaction logged successfully!`);
+                    viewToSwitch = 'environmental';
+                } else if (type === 'csr') {
+                    showToast(`Volunteer hours logged successfully!`);
+                    viewToSwitch = 'social';
+                } else if (type === 'audit') {
+                    showToast(`Audit scheduled successfully!`);
+                    viewToSwitch = 'governance';
+                } else if (type === 'challenge') {
+                    showToast(`Challenge created successfully!`);
+                    viewToSwitch = 'gamification';
+                }
+
+                // Reload all data from the persistent server JSON database
+                loadDashboardData();
+                closeModal();
+                if (viewToSwitch) {
+                    switchView(viewToSwitch);
+                }
+            })
+            .catch(err => {
+                showToast(err.message, 'error');
+            });
+        }
+
+        // AI Copilot simulations
+        function sendQuery() {
+            const input = document.getElementById('chatInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            const messagesContainer = document.getElementById('chatMessages');
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.innerText = query;
+            messagesContainer.appendChild(userMsg);
+            input.value = '';
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot';
+                botMsg.innerHTML = getCopilotResponse(query);
+                messagesContainer.appendChild(botMsg);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 800);
+        }
+
+        function getCopilotResponse(query) {
+            const q = query.toLowerCase();
+            if (q.includes('approve') || q.includes('modify') || q.includes('change') || q.includes('edit')) {
+                return `<strong>AI Advisor response:</strong><br>
+                <span style="color:var(--domain-alerts); font-weight:700;">I cannot approve ERP records, change ESG scores, or modify databases. Please use the standard user approval workflow interfaces instead.</span>`;
+            }
+            if (q.includes('decrease') || q.includes('score')) {
+                return `<strong>AI Copilot response:</strong><br>
+                Our overall ESG score decreased to <strong>81.1/100</strong> because:<br>
+                1. Volunteer hours actual (8.0 hours) is currently at 8% of target limits.<br>
+                2. Risk average is at 10.6, generating a penalty on the Governance score (G: 83.0%).`;
+            } else if (q.includes('highest') || q.includes('emissions') || q.includes('department')) {
+                return `<strong>AI Copilot response:</strong><br>
+                The department carbon footprint log is:<br>
+                1. <strong>Operations</strong>: 9.84 tCO2e (Scope 2 Grid usage) — <em>Approved</em>.<br>
+                2. <strong>Facilities</strong>: 4.02 tCO2e (stationary diesel) — <em>Draft</em>.`;
+            } else if (q.includes('csr') || q.includes('volunteering') || q.includes('activities')) {
+                return `<strong>AI Copilot response:</strong><br>
+                This month's volunteer ledger: <strong>1 active activity</strong>.<br>
+                - <em>Annual Tree Planting Initiative 2026</em>: Siddharth logged <strong>8.0 hours</strong> (80 points awarded).`;
+            } else {
+                return `<strong>AI Copilot response:</strong><br>
+                To improve our ESG score:<br>
+                1. Approve the 1,500L diesel carbon transaction to resolve the audit variance.<br>
+                2. Enforce the DEI sustainable training completion rules to reach 100% S grade.`;
+            }
+        }
+
+        // Live main advisor query simulation
+        function sendAdvisorQuery() {
+            const input = document.getElementById('mainAdvisorInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            const messagesContainer = document.getElementById('mainAdvisorMessages');
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.innerText = query;
+            messagesContainer.appendChild(userMsg);
+            input.value = '';
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot';
+                
+                let advice = "";
+                const q = query.toLowerCase();
+                if (q.includes('approve') || q.includes('modify') || q.includes('change') || q.includes('edit')) {
+                    advice = "**AI ADVISOR:**\nI cannot approve ERP records, change ESG scores, or modify databases. Please use the standard user approval workflow interfaces instead.";
+                } else if (q.includes('carbon') || q.includes('emission') || q.includes('scope')) {
+                    const scope1 = loadedData ? loadedData.carbon_transactions.filter(t => t.type.includes('Scope 1')).reduce((sum, t) => sum + t.co2, 0) : 4.02;
+                    const scope2 = loadedData ? loadedData.carbon_transactions.filter(t => t.type.includes('Scope 2')).reduce((sum, t) => sum + t.co2, 0) : 9.84;
+                    const scope3 = loadedData ? loadedData.carbon_transactions.filter(t => t.type.includes('Scope 3')).reduce((sum, t) => sum + t.co2, 0) : 0.0;
+                    const totalCarbon = (scope1 + scope2 + scope3).toFixed(2);
+                    advice = `**AI ADVISOR RECOMMENDATION:**\n* **Real-time Carbon Footprint**: **${totalCarbon} tCO2e**\n  - Scope 1 (Direct): ${scope1.toFixed(2)} t\n  - Scope 2 (Indirect): ${scope2.toFixed(2)} t\n  - Scope 3 (Other): ${scope3.toFixed(2)} t\n* **Mitigations**: Transition logistics backup generators from Diesel to battery reserves.\n* **Goal tracking status**: Operations is under cap. Overall target safety grade: 100%.`;
+                } else if (q.includes('point') || q.includes('badge') || q.includes('gamif') || q.includes('csr') || q.includes('volunteer') || q.includes('social')) {
+                    let listStr = "";
+                    if (loadedData && loadedData.csr_activities && loadedData.csr_activities.length > 0) {
+                        listStr = loadedData.csr_activities.map(a => `  - ${a.volunteer}: ${a.event} (${a.hours}, ${a.points})`).join('\n');
+                    } else {
+                        listStr = "  - No volunteer logs registered yet.";
+                    }
+                    advice = `**AI ADVISOR SOCIAL ANALYSIS:**\n* **Real-time Employee Engagement**:\n${listStr}\n* **Suggestion**: Create a weekly challenge 'SustainableCommute' with a 100 points reward badge to boost team engagement.`;
+                } else {
+                    const currentScore = loadedData ? loadedData.esg_score.toFixed(1) : "89.5";
+                    advice = `**AI ADVISOR STRATEGIC FEEDBACK:**\n* **Real-time Weighted ESG Grade**: **${currentScore} / 100**\n* **E-Score**: ${loadedData ? loadedData.e_score.toFixed(1) : "92.0"}% | **S-Score**: ${loadedData ? loadedData.s_score.toFixed(1) : "80.0"}% | **G-Score**: ${loadedData ? loadedData.g_score.toFixed(1) : "83.0"}%\n* **Action Plan**: Review the scheduled audits and verify diesel fuel refills to eliminate compliance variances.`;
+                }
+
+                botMsg.innerHTML = advice.replace(/\n/g, '<br>').replace(/\*\frac{.*?}{.*?}/g, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') + `
+                    <div style="margin-top: 12px; display: flex; gap: 8px;">
+                        <button onclick="rateRecommendation('Advisor Chat Query', 'like')" style="background:rgba(16,185,129,0.15); border:1px solid var(--domain-environmental); color:var(--domain-environmental); padding:4px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Helpful 👍</button>
+                        <button onclick="rateRecommendation('Advisor Chat Query', 'dislike')" style="background:rgba(239,68,68,0.15); border:1px solid var(--domain-alerts); color:var(--domain-alerts); padding:4px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Not Helpful 👎</button>
+                    </div>
+                `;
+                messagesContainer.appendChild(botMsg);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 800);
+        }
+
+        // Switch secondary sub-tab panel view
+        function switchSubTab(moduleKey, tabKey) {
+            // Hide all subpanels for this module
+            document.querySelectorAll(`.subpanel-${moduleKey}`).forEach(el => {
+                el.style.display = 'none';
+            });
+            // Show the target subpanel
+            const activePanel = document.getElementById(`subpanel-${moduleKey}-${tabKey}`);
+            if (activePanel) {
+                activePanel.style.display = 'block';
+            }
+
+            // Update sub-tab button styling
+            // Find all sub-tab buttons inside the parent of switchSubTab call context
+            const container = event.currentTarget.parentElement;
+            container.querySelectorAll('.ops-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        // Generate Report Toast
+        function generateReport() {
+            showToast('Generating PDF report. Please wait...');
+            setTimeout(() => {
+                showToast('Report generated successfully! Downloaded PDF: ecosphere_esg_report.pdf');
+            }, 1500);
+        }
+
+        // Run Custom Report Builder
+        function runCustomReport(event) {
+            if (event) event.preventDefault();
+            showToast('Custom report compiled successfully!');
+        }
+
+        // Initialize
+        loadDashboardData();
+    </script>
+</body>
+</html>

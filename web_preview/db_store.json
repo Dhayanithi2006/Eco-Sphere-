@@ -1,0 +1,68 @@
+{
+    "esg_score": 88.7585,
+    "e_score": 92.0,
+    "s_score": 80.0,
+    "g_score": 83.0,
+    "health": "Excellent",
+    "trend": "Improving",
+    "carbon_transactions": [
+        {
+            "date": "2026-07-12",
+            "name": "chennai planting",
+            "type": "Scope 3 (Other)",
+            "qty": "1,000 units",
+            "co2": 0.15,
+            "status": "Approved"
+        },
+        {
+            "date": "2026-07-12",
+            "name": "chennai",
+            "type": "Scope 2 (Indirect)",
+            "qty": "1,000 units",
+            "co2": 0.82,
+            "status": "Approved"
+        },
+        {
+            "date": "2026-07-05",
+            "name": "Ops Warehouse Grid Logging Q2",
+            "type": "Scope 2 (Indirect)",
+            "qty": "12,000 kWh",
+            "co2": 9.84,
+            "status": "Approved"
+        },
+        {
+            "date": "2026-07-10",
+            "name": "Generator Diesel Fill-up",
+            "type": "Scope 1 (Direct)",
+            "qty": "1,500 Liters",
+            "co2": 4.02,
+            "status": "Draft"
+        }
+    ],
+    "csr_activities": [
+        {
+            "volunteer": "Siddharth",
+            "event": "Annual Tree Planting Initiative 2026",
+            "hours": "8.0 Hours",
+            "points": "80 Points",
+            "date": "2026-07-05"
+        }
+    ],
+    "rewards": [
+        {
+            "name": "Eco Bamboo Water Bottle",
+            "cost": "60 Points",
+            "stock": 15
+        },
+        {
+            "name": "Recycled Cork Notebook",
+            "cost": "30 Points",
+            "stock": 25
+        },
+        {
+            "name": "Solar Window Charger",
+            "cost": "180 Points",
+            "stock": 5
+        }
+    ]
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ecosphere_report_export_wizard_form" model="ir.ui.view">
+        <field name="name">ecosphere.report.export.wizard.form</field>
+        <field name="model">ecosphere.report.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export ESG Data Sheets">
+                <sheet>
+                    <group>
+                        <group string="Export Scope">
+                            <field name="report_type" widget="radio"/>
+                            <field name="department_id" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Timeframe Filters">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <group invisible="not export_file">
+                        <field name="export_filename" invisible="1"/>
+                        <field name="export_file" filename="export_filename" readonly="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_export_csv" type="object" string="Generate CSV Sheet" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </record>
+
+        <!-- Action -->
+        <record id="action_ecosphere_report_export_wizard" model="ir.actions.act_window">
+            <field name="name">Export Data Sheets</field>
+            <field name="res_model">ecosphere.report.export.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</odoo>

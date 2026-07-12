@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Gamification Main Menu Section -->
+    <menuitem id="menu_ecosphere_gamification"
+              name="Gamification"
+              parent="ecosphere_base.menu_ecosphere_root"
+              sequence="50"/>
+
+    <!-- Challenges Menu -->
+    <menuitem id="menu_ecosphere_challenges"
+              name="Active Challenges"
+              parent="menu_ecosphere_gamification"
+              action="action_ecosphere_challenge"
+              sequence="10"/>
+
+    <!-- Badges Cabinet Menu -->
+    <menuitem id="menu_ecosphere_badges"
+              name="Badges Cabinet"
+              parent="menu_ecosphere_gamification"
+              action="action_ecosphere_badge"
+              sequence="20"/>
+
+    <!-- Rewards Store Menu -->
+    <menuitem id="menu_ecosphere_rewards"
+              name="Rewards Store"
+              parent="menu_ecosphere_gamification"
+              action="action_ecosphere_reward"
+              sequence="30"/>
+
+    <!-- Leaderboard Menu -->
+    <menuitem id="menu_ecosphere_leaderboard_log"
+              name="Leaderboard"
+              parent="menu_ecosphere_gamification"
+              action="action_ecosphere_leaderboard"
+              sequence="40"/>
+</odoo>

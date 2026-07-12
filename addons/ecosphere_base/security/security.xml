@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Module Category -->
+        <record id="module_category_sustainability" model="ir.module.category">
+            <field name="name">Sustainability (EcoSphere)</field>
+            <field name="description">Access rights for EcoSphere ESG Platform modules</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Security Groups -->
+        
+        <!-- Employee Group -->
+        <record id="group_ecosphere_employee" model="res.groups">
+            <field name="name">Employee</field>
+            <field name="category_id" ref="module_category_sustainability"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Basic access to view points, participate in challenges, and sign off policies.</field>
+        </record>
+
+        <!-- Manager Group -->
+        <record id="group_ecosphere_manager" model="res.groups">
+            <field name="name">Sustainability Manager</field>
+            <field name="category_id" ref="module_category_sustainability"/>
+            <field name="implied_ids" eval="[(4, ref('group_ecosphere_employee'))]"/>
+            <field name="comment">Manage department ESG goals, approve volunteer activities, and view metrics.</field>
+        </record>
+
+        <!-- Auditor Group -->
+        <record id="group_ecosphere_auditor" model="res.groups">
+            <field name="name">Auditor</field>
+            <field name="category_id" ref="module_category_sustainability"/>
+            <field name="implied_ids" eval="[(4, ref('group_ecosphere_employee'))]"/>
+            <field name="comment">Read-only access to all transactions, policies, compliance, risks, and audit logs.</field>
+        </record>
+
+        <!-- Compliance Officer Group -->
+        <record id="group_ecosphere_compliance" model="res.groups">
+            <field name="name">Compliance Officer</field>
+            <field name="category_id" ref="module_category_sustainability"/>
+            <field name="implied_ids" eval="[(4, ref('group_ecosphere_employee'))]"/>
+            <field name="comment">Manage policy lifecycle, create risk items, track audits, and compliance issues.</field>
+        </record>
+
+        <!-- Administrator Group -->
+        <record id="group_ecosphere_admin" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="module_category_sustainability"/>
+            <field name="implied_ids" eval="[(4, ref('group_ecosphere_compliance')), (4, ref('group_ecosphere_manager'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+            <field name="comment">Full settings, master data, and configuration access.</field>
+        </record>
+
+        <!-- Record Rules (Multi-Company & Department Isolation) -->
+        
+        <!-- Multi-Company Rule -->
+        <record id="ecosphere_base_comp_rule" model="ir.rule">
+            <field name="name">EcoSphere Company isolation</field>
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="domain_force">['|', ('id', '=', user.company_id.id), ('id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+    </data>
+</odoo>

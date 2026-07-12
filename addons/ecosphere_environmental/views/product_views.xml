@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_inherit_ecosphere" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.ecosphere</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Sustainability (ESG)" name="sustainability_esg_product">
+                    <group>
+                        <group string="Footprint Matrix">
+                            <label for="carbon_footprint"/>
+                            <div class="o_row">
+                                <field name="carbon_footprint"/>
+                                <span>kgCO2e</span>
+                            </div>
+                            <field name="sustainability_grade"/>
+                        </group>
+                        <group string="Eco-Labelling">
+                            <field name="is_sustainable"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Products -->
+    <record id="action_ecosphere_products" model="ir.actions.act_window">
+        <field name="name">Product ESG Profiles</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_to_sell': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Manage product environmental profiles.
+            </p>
+            <p>
+                Configure carbon footprints, lifecycle grades, and certifications for inventory templates.
+            </p>
+        </field>
+    </record>
+</odoo>

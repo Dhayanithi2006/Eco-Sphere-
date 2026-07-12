@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AI Main Menu Section -->
+    <menuitem id="menu_ecosphere_ai_root"
+              name="AI Advisor"
+              parent="ecosphere_base.menu_ecosphere_root"
+              sequence="70"/>
+
+    <!-- Ask AI Advisor Action Menu -->
+    <menuitem id="menu_ecosphere_ai_wizard"
+              name="Ask AI Advisor"
+              parent="menu_ecosphere_ai_root"
+              action="action_ecosphere_ai_advisor_wizard"
+              sequence="10"/>
+
+    <!-- Consultation History Menu -->
+    <menuitem id="menu_ecosphere_ai_history"
+              name="Consultation Logs"
+              parent="menu_ecosphere_ai_root"
+              action="action_ecosphere_ai_history"
+              sequence="20"/>
+</odoo>

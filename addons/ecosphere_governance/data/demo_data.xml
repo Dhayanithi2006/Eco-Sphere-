@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Policies -->
+        <record id="policy_conduct" model="ecosphere.policy">
+            <field name="name">Corporate Sustainability Code of Conduct</field>
+            <field name="version">1.0</field>
+            <field name="state">published</field>
+        </record>
+
+        <record id="policy_carbon_offset" model="ecosphere.policy">
+            <field name="name">Annual Carbon Mitigation &amp; Offsets Policy</field>
+            <field name="version">2.1</field>
+            <field name="state">published</field>
+        </record>
+
+        <record id="policy_chemical_safety" model="ecosphere.policy">
+            <field name="name">Hazardous Materials Handling &amp; Waste Safety</field>
+            <field name="version">0.8</field>
+            <field name="state">draft</field>
+        </record>
+
+        <!-- Compliance Audits -->
+        <record id="audit_ops_q2" model="ecosphere.audit">
+            <field name="name">Q2 Internal Operational Governance Check</field>
+            <field name="audit_type">internal</field>
+            <field name="auditor_id" ref="ecosphere_base.user_esg_auditor"/>
+            <field name="audit_date">2026-07-02</field>
+            <field name="score">92.0</field>
+            <field name="compliance_status">compliant</field>
+            <field name="notes">Warehouse safety measures and diversity parameters are fully met. Minor carbon target variances noted but approved.</field>
+        </record>
+
+        <record id="audit_facilities_external" model="ecosphere.audit">
+            <field name="name">Third-Party External Emissions Audit</field>
+            <field name="audit_type">external</field>
+            <field name="auditor_id" ref="ecosphere_base.user_esg_auditor"/>
+            <field name="audit_date">2026-07-06</field>
+            <field name="score">68.0</field>
+            <field name="compliance_status">non_compliant</field>
+            <field name="notes">Scope 1 combustion reports show unlogged fuel consumption. Boiler emissions check indicates required maintenance delay.</field>
+        </record>
+
+        <!-- Compliance Issues -->
+        <record id="issue_unlogged_fuel" model="ecosphere.compliance.issue">
+            <field name="title">Unlogged Diesel usage in facilities backup generators</field>
+            <field name="policy_id" ref="policy_carbon_offset"/>
+            <field name="source_audit_id" ref="audit_facilities_external"/>
+            <field name="priority">high</field>
+            <field name="status">review</field>
+            <field name="description">Facilities team filled 1,500L diesel fuel on generator backups which was not recorded in the central carbon transaction ledger, leading to audit variance.</field>
+        </record>
+
+        <!-- Risk Register Items -->
+        <record id="risk_diesel_spill" model="ecosphere.risk">
+            <field name="title">Generator Fuel Spillage &amp; Ground Leakage</field>
+            <field name="category">environmental</field>
+            <field name="likelihood">2</field> <!-- Unlikely -->
+            <field name="impact">4</field> <!-- Major -->
+            <field name="owner_id" ref="ecosphere_base.user_esg_compliance"/>
+            <field name="mitigation_plan">Install double-walled containment basins around backup fuel reservoirs and carry out bi-weekly mechanical inspects.</field>
+        </record>
+
+        <record id="risk_factory_hazards" model="ecosphere.risk">
+            <field name="title">Warehouse Employee Safety and Gear Compliance Failures</field>
+            <field name="category">social</field>
+            <field name="likelihood">3</field> <!-- Possible -->
+            <field name="impact">4</field> <!-- Major -->
+            <field name="owner_id" ref="ecosphere_base.user_esg_compliance"/>
+            <field name="mitigation_plan">Conduct mandatory weekly safety check audits and enforce automated alerts when employee safety training completion rate drops below 90%.</field>
+        </record>
+
+        <record id="risk_offset_tax" model="ecosphere.risk">
+            <field name="title">Stricter Governmental Carbon Surcharges &amp; Taxes</field>
+            <field name="category">governance</field>
+            <field name="likelihood">4</field> <!-- Likely -->
+            <field name="impact">3</field> <!-- Moderate -->
+            <field name="owner_id" ref="ecosphere_base.user_esg_compliance"/>
+            <field name="mitigation_plan">Accelerate local solar rooftop implementations and optimize utility targets to offset expected grid tax variances.</field>
+        </record>
+    </data>
+</odoo>

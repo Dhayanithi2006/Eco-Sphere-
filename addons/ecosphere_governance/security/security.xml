@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Policies Access Rules -->
+
+        <!-- Employee: Can only view published policies -->
+        <record id="rule_policy_employee" model="ir.rule">
+            <field name="name">Employee Policies: Published Only</field>
+            <field name="model_id" ref="model_ecosphere_policy"/>
+            <field name="domain_force">[('state', '=', 'published')]</field>
+            <field name="groups" eval="[(4, ref('ecosphere_base.group_ecosphere_employee'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Compliance & Managers: Global policies access -->
+        <record id="rule_policy_compliance" model="ir.rule">
+            <field name="name">Compliance/Managers Policies: Global Access</field>
+            <field name="model_id" ref="model_ecosphere_policy"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('ecosphere_base.group_ecosphere_manager')), (4, ref('ecosphere_base.group_ecosphere_compliance')), (4, ref('ecosphere_base.group_ecosphere_admin')), (4, ref('ecosphere_base.group_ecosphere_auditor'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Policy Acknowledgement Access Rules -->
+
+        <!-- Employee: Can only view and edit their own acknowledgements -->
+        <record id="rule_policy_acknowledgment_employee" model="ir.rule">
+            <field name="name">Employee Sign-off: Own records only</field>
+            <field name="model_id" ref="model_ecosphere_policy_acknowledgment"/>
+            <field name="domain_force">[('employee_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('ecosphere_base.group_ecosphere_employee'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Compliance & Auditor: Global View of policy sign-offs -->
+        <record id="rule_policy_acknowledgment_global" model="ir.rule">
+            <field name="name">Compliance/Auditor Sign-off: Global Access</field>
+            <field name="model_id" ref="model_ecosphere_policy_acknowledgment"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('ecosphere_base.group_ecosphere_auditor')), (4, ref('ecosphere_base.group_ecosphere_compliance')), (4, ref('ecosphere_base.group_ecosphere_admin'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+    </data>
+</odoo>
