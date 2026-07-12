@@ -102,6 +102,14 @@ python web_preview/server.py
 Once running, open your web browser and go to:
 👉 **http://localhost:8000**
 
+#### Accessing from another laptop/device on the same network:
+Since the server binds to `0.0.0.0`, you can access the preview from any device connected to the **same Wi-Fi or local area network**:
+1. Find the local IP address of the computer running the server:
+   - **Windows**: Run `ipconfig` in Command Prompt / PowerShell and look for `IPv4 Address` (e.g., `192.168.1.15`).
+   - **macOS/Linux**: Run `ifconfig` or `ip a` in the terminal.
+2. On the other laptop, open the browser and navigate to:
+   👉 `http://<your-local-ip>:8000` (e.g., `http://192.168.1.15:8000`)
+
 ---
 
 ### 2. Running Odoo ERP Unit Tests
