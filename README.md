@@ -1,6 +1,19 @@
-# EcoSphere AI - Enterprise Sustainability Intelligence Platform
+# EcoSphere AI - Enterprise Sustainability & ESG Intelligence Platform
 
-EcoSphere AI is an Enterprise Sustainability Intelligence Platform built as a modular suite of Odoo 18 ERP custom addons. It provides standard ESG tracking, enterprise validation workflows (RBAC, audit logs, and approval cycles), and a powerful generative AI decision-support layer.
+EcoSphere AI is an advanced, enterprise-grade Sustainability & ESG Intelligence Platform built as a modular suite of Odoo 18 ERP custom addons. It integrates real-time carbon tracking, corporate social responsibility management, compliance audit trails, gamified employee initiatives, and a context-aware Generative AI decision-support advisor.
+
+The platform provides standard ESG metric aggregations, strict Role-Based Access Control (RBAC) permission matrices, dynamic approval and verification cycles, and an interactive simulation dashboard.
+
+---
+
+## Core Features
+
+- **🌱 Carbon Ledger (Environmental)**: Granular tracking of Scope 1, Scope 2, and Scope 3 greenhouse gas emissions, calculated in real-time from transactional logs using versioned conversion factors.
+- **👥 CSR & Volunteering (Social)**: Employee volunteer logs, diversity index scorecards, and management of corporate social responsibility activities with validation workflows.
+- **📄 Policies & Compliance (Governance)**: Compliance registers, risk matrices, policy acknowledgments tracker, and external audits scheduler.
+- **🎯 Gamification & Badges**: Sustainability challenge campaigns, points ledger, redeemable rewards catalog, and leaderboards to drive employee engagement.
+- **💡 AI Strategic Advisor**: Generative AI decision intelligence bot reading calculated database statistics to recommend context-aware mitigations.
+- **📊 Interactive Simulator Dashboard**: Live preview dashboard with a dynamic SVG gauge needle, Odoo REST API simulations, and role-based interface visibility controls.
 
 ---
 
