@@ -4,7 +4,6 @@ EcoSphere AI is an advanced, enterprise-grade Sustainability & ESG Intelligence 
 
 The platform provides standard ESG metric aggregations, strict Role-Based Access Control (RBAC) permission matrices, dynamic approval and verification cycles, and an interactive simulation dashboard.
 
----
 
 ## Core Features
 
